@@ -8,7 +8,7 @@
   
 import numpy as np
 import matplotlib.pyplot as plt
-import graphiclib_path as gl
+import graphiclib_path
 import graphiclib as gl
 
 # Create some points
