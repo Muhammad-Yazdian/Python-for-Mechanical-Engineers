@@ -1,19 +1,20 @@
 """**Basic Mathematics for Robotics**
 
-    - Author: S.M. Yazdian
-    - Date: 2022
+  - Author: S.M. Yazdian
+  - Date: 2022
 
-    Features:
-        - Based on NumPy
+  Features:
+    - Based on NumPy
 
-    Usage:
-        Use *rl* namespace when importing roboticlib. 
+  Usage:
+    Use *rl* namespace when importing roboticlib. 
     
-        Example:
-        ::
-          import roboticlib as rl
-          alpha = 30 # (deg)
-          rot_x = rl.rotatoinMatixX(alpha)"""
+    Example:
+    ::
+
+        import roboticlib as rl
+        alpha = 30 # (deg)
+        rot_x = rl.rotatoinMatixX(alpha)"""
 
 import numpy as np
 import mathlib_path
