@@ -1,4 +1,11 @@
-# import sys
+#=========================================================
+# e01_rotate_frame.py
+# 
+# A simple example for drawing rotation matrix
+#
+# Seied Muhammad Yazdian | Jan 30, 2022
+#=========================================================
+
 import roboticlib_path
 import roboticlib as rl
 
