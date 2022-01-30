@@ -19,6 +19,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+class Frame:
+  def __init__(self, rotation_matrix):
+    self.rotation_matrix = rotation_matrix
+
 def rotatoinMatixX(theta):
   r"""Returns the rotation matrix of a frame rotated by :math:`\theta` degrees about x axis
 
