@@ -1,5 +1,5 @@
 #==================================================================
-# misc_set_axes_equal.py
+# misc_example_set_axes_equal.py
 # 
 # A simple example for drawing 3D graphics with equal aspect ratio
 #
