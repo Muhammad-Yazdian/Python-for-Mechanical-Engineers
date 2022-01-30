@@ -4,16 +4,17 @@
   - Date: 2022
 
   Features:
-   - Based on NumPy
+    - Based on NumPy
 
   Usage: 
     Use *ml* namespace when importing mathlib.
     
     Example:
     ::
-      import mathlib as ml
-      alpha = 30 # (deg)
-      rot_x = ml.rotatoinMatixX(alpha)"""
+    
+        import mathlib as ml
+        alpha = 30 # (deg)
+        rot_x = ml.rotatoinMatixX(alpha)"""
 
 import numpy as np
 
