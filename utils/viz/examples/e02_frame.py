@@ -3,7 +3,7 @@
 # 
 # A simple example for drawing 3D frames using graphiclib
 #
-# Seied Muhammad Yazdian | Jan 29, 2022
+# Seied Muhammad Yazdian | Jan 30, 2022
 #=========================================================
   
 import numpy as np
@@ -13,15 +13,16 @@ import graphiclib as gl
 import roboticlib_path
 import roboticlib as rl
 
-point_a = gl.Point3d(0, 0, 0)
-point_b = gl.Point3d(0, 0, 2)
+point_0 = np.array([0, 0, 0])
+point_1 = np.array([0.75, 0.25, 0])
+arrow_1 = np.array([1, 1, 1])
+frame_1 = rl.Frame(rl.rotatoinMatixZ(0))
 
 # Display contents
 fig = plt.figure()
 ax = plt.axes(projection='3d')
-gl.GraphicalFrame(ax, point_a)
-rotz = rl.rotatoinMatixZ(30)
-gl.GraphicalFrame(ax, point_a, rotz)
+gl.draw(ax, point_1, color='r')
+gl.draw(ax, arrow_1, position=point_0, color='k')
+gl.draw(ax, frame_1, position=point_0)
 gl.set_axes_equal(ax)
 plt.show()
-

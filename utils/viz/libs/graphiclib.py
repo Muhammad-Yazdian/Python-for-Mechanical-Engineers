@@ -8,6 +8,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d, Axes3D
+import roboticlib_path
+import roboticlib as rl
+
+
+class Arrow3D(FancyArrowPatch):
+    """Construct a 3D arrow based on matplotlib's FancyArrowPatch
+
+      More information:
+        https://stackoverflow.com/questions/11140163/plotting-a-3d-cube-a-sphere-and-a-vector-in-matplotlib"""
+
+    def __init__(self, xs, ys, zs, *args, **kwargs):
+        FancyArrowPatch.__init__(self, (0, 0), (0, 0), *args, **kwargs)
+        self._verts3d = xs, ys, zs
+
+    def draw(self, renderer):
+        xs3d, ys3d, zs3d = self._verts3d
+        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
+        self.set_positions((xs[0], ys[0]), (xs[1], ys[1]))
+        FancyArrowPatch.draw(self, renderer)
 
 
 def set_axes_equal(ax):
@@ -44,109 +63,50 @@ def set_axes_equal(ax):
     ax.set_zlim3d([z_middle - plot_radius, z_middle + plot_radius])
 
 
-class Point3d:
-    """A 3D position point relative to origin (based on NumPy)"""
+def draw(ax, item, *args, **kwargs):
+    """Displays a generic object
+      Note: It is required to setup a figure before calling draw() function."""
 
-    def __init__(self, x, y, z):
-        self.values = np.array([float(x), float(y), float(z)])
-
-    def __getitem__(self, i):
-        """Makes the object substricptable; aka Position3d[0], ..."""
-        return self.values[i]
-
-    # Addition is not meaningful for Points    
-    # def __add__(self, other):
-    #     """Overloading + operator"""
-    #     sum_value = self.values + other.values
-    #     return Point(sum_value[0], sum_value[1], sum_value[2])
-
-class Vector3d:
-    """A 3D free vector without any origin (based on NumPy)"""
-
-    def __init__(self, dx, dy, dz):
-        self.values = np.array([float(dx), float(dy), float(dz)])
-
-    def __getitem__(self, i):
-        """Makes the object substricptable; aka Position3d[0], ..."""
-        return self.values[i]
-
-    def __add__(self, other):
-        """Overloading + operator"""
-        result = self.values + other.values
-        # TODO: Use function overloading
-        return Vector3d(result[0], result[1], result[2])
-
-    def __sub__(self, other):
-        """Overloading - operator"""
-        result = self.values - other.values
-        return Vector3d(result[0], result[1], result[2])
-
-    def dot(self, other):
-        """Inner dot product"""
-        return np.inner(self.values, other.values)
-
-    def cross(self, other):
-        """Outer cross product"""
-        result = np.cross(self.values, other.values)
-        return Vector3d(result[0], result[1], result[2])
+    position = kwargs.get('position')
+    color = kwargs.get('color')
+    if isinstance(item, rl.Frame):
+        drawFrame(ax, item, position)
+    else:
+        # drawPoint(ax, item) # TODO: Add drawPoint() funciton
+        if position is None:
+            drawPoint(ax, item, color)
+        else:
+            drawArrow(ax, item, position, color)
 
 
-class Arrow3D(FancyArrowPatch):
-    """Construct a 3D arrow based on matplotlib's FancyArrowPatch
-
-      More information:
-        https://stackoverflow.com/questions/11140163/plotting-a-3d-cube-a-sphere-and-a-vector-in-matplotlib"""
-
-    def __init__(self, xs, ys, zs, *args, **kwargs):
-        FancyArrowPatch.__init__(self, (0, 0), (0, 0), *args, **kwargs)
-        self._verts3d = xs, ys, zs
-
-    def draw(self, renderer):
-        xs3d, ys3d, zs3d = self._verts3d
-        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
-        self.set_positions((xs[0], ys[0]), (xs[1], ys[1]))
-        FancyArrowPatch.draw(self, renderer)
+def drawPoint(ax, vector, color):
+    """Displays a 3D point indicated by a vector relative to origin of ax"""
+    
+    ax.plot(vector[0], vector[1], vector[2], 'o', color=color)
 
 
-class Arrow3D2:
-    """Constructs a graphical 3D arrow"""
+def drawArrow(ax, vector, position, color):
+    """Displays a 3D vector at a given position"""
 
-    def __init__(self, start, end, ax, color='k'):
-        """Note: Setup a figure before calling draw() function."""
-        self.start = start
-        self.end = end
-        self.color = color
-        self.ax = ax
-        # def draw(self, ax):
-        s = self.start
-        e = self.end
-        # A standard line plot behind the Arrow3D.
-        # It is required to pass as ax when using set_axes_equal(ax)
-        # Add the arrow with a triangle at the tip
-        ax.plot((s[0], e[0]), (s[1], e[1]), (s[2], e[2]), color=self.color)
-        a = Arrow3D((s[0], e[0]), (s[1], e[1]), (s[2], e[2]), mutation_scale=15,
-                    lw=1, arrowstyle="-|>", color=self.color)
-        ax.add_artist(a)
-        
+    a = position
+    b = position + vector
+    # A standard line plot behind the Arrow3D.
+    # It is required to pass as ax when using set_axes_equal(ax)
+    # Add the arrow with a triangle at the tip
+    ax.plot((a[0], b[0]), (a[1], b[1]), (a[2], b[2]), color=color)
+    arrow = Arrow3D((a[0], b[0]), (a[1], b[1]), (a[2], b[2]), mutation_scale=15,
+                lw=1, arrowstyle="-|>", color=color)
+    ax.add_artist(arrow)
 
-class GraphicalFrame:
-    """Constructs a graphical 3D frame (right-handed coordinate system)
+
+def drawFrame(ax, frame, position):
+    """Displays a 3D frame (i.e., rotation matrix) at a given position
+      The frame is right-handed and color-coded:
     
       - Red axis: :math:`\hat{x}`
       - Green axis: :math:`\hat{y}`
       - Blue axis: :math:`\hat{z}`"""
 
-    def __init__(self, ax, position, orientation=None):
-        self.position = position
-        self.orientation = np.identity(3)
-        if orientation is None:
-            self.orientation = np.identity(3)
-        else:
-            self.orientation = orientation
-        
-        # def draw(self, ax):
-        p = self.position
-        o = self.orientation
-        Arrow3D2(p, (p[0]+o[0][0], p[1]+o[0][1], p[2]+o[0][2]), ax, 'r')
-        Arrow3D2(p, (p[0]+o[1][0], p[1]+o[1][1], p[2]+o[1][2]), ax, 'g')
-        Arrow3D2(p, (p[0]+o[2][0], p[1]+o[2][1], p[2]+o[2][2]), ax, 'b')
+    drawArrow(ax, frame.rotation_matrix[:,0], position, 'r')
+    drawArrow(ax, frame.rotation_matrix[:,1], position, 'g')
+    drawArrow(ax, frame.rotation_matrix[:,2], position, 'b')
