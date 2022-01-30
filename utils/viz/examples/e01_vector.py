@@ -12,35 +12,30 @@ import graphiclib_path
 import graphiclib as gl
 
 # Create some 3D points
-point_a = gl.Point3d(0, 0, 0)
-point_b = gl.Point3d(3, 0, 0)
-point_c = gl.Point3d(0, 2, 0)
-point_d = gl.Point3d(3, 3, 1)
+point_a = np.array([0.0, 0, 0]) 
+point_b = np.array([3.0, 0, 0])
+point_c = np.array([0.0, 2, 0])
+point_d = np.array([3.0, 3, 1])
 
 # Create some 3D vectors
-vector_a = gl.Vector3d(0, 0, 0)
-vector_b = gl.Vector3d(3, 0, 0)
-vector_c = gl.Vector3d(0, 2, 0)
-vector_d = gl.Vector3d(3, 3, 1)
+vector_a = np.array([0.0, 0, 0])
+vector_b = np.array([3.0, 0, 0])
+vector_c = np.array([0.0, 2, 0])
+vector_d = np.array([3.0, 3, 1])
 vector_e = vector_b + vector_c
-vector_f = vector_b.cross(vector_c)
+vector_f = np.cross(vector_b, vector_c)
 print(type(vector_e))
 print(type(vector_f))
 
 # Display the arrows
 fig = plt.figure()
 ax = plt.axes(projection='3d')
-plt.xlim(-1, 4)
-plt.ylim(-1, 4)
-# plt.zlim(-3, 3) # Not supported.
-ax.set_aspect('auto', 'box') # 'equal is not supported'
-
 # Create and display some arrows/vectors based on the available points/vectors
-arrow_a = gl.Arrow3D2(point_a, point_b, ax, 'k')
-arrow_b = gl.Arrow3D2(point_b, point_c, ax, 'g')
-arrow_c = gl.Arrow3D2(point_a, point_c, ax, 'b')
-arrow_d = gl.Arrow3D2(point_b, point_d, ax, 'r')
-arrow_e = gl.Arrow3D2(point_a, vector_e, ax, 'r')
-arrow_f = gl.Arrow3D2(point_a, vector_f, ax, 'b')
-
+gl.draw(ax, 'arrow', point_b, position=point_a, color='k')
+gl.draw(ax, 'arrow', point_c, position=point_b, color='g')
+gl.draw(ax, 'arrow', point_c, position=point_a, color='b')
+gl.draw(ax, 'arrow', point_d, position=point_b, color='r')
+gl.draw(ax, 'arrow', vector_e, position=point_a, color='r')
+gl.draw(ax, 'arrow', vector_f, position=point_a, color='b')
+gl.set_axes_equal(ax)
 plt.show()
