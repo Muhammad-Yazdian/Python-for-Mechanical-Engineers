@@ -1,15 +1,13 @@
 """Graphical library provides tools for displaying 3D vector, frames, and more.
   
-  Seied Muhammad Yazdian | Jan 29, 2022
+    Seied Muhammad Yazdian | Jan 29, 2022
 
-  muhammad.yazdian@gmail.com"""
+    muhammad.yazdian@gmail.com"""
 
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d, Axes3D
-import roboticlib_path
-import roboticlib as rl
 
 
 class Arrow3D(FancyArrowPatch):
@@ -17,7 +15,6 @@ class Arrow3D(FancyArrowPatch):
 
       More information:
         https://stackoverflow.com/questions/11140163/plotting-a-3d-cube-a-sphere-and-a-vector-in-matplotlib"""
-
     def __init__(self, xs, ys, zs, *args, **kwargs):
         FancyArrowPatch.__init__(self, (0, 0), (0, 0), *args, **kwargs)
         self._verts3d = xs, ys, zs
@@ -42,7 +39,6 @@ def set_axes_equal(ax):
 
       Source:
         https://stackoverflow.com/questions/13685386/matplotlib-equal-unit-length-with-equal-aspect-ratio-z-axis-is-not-equal-to'''
-
     x_limits = ax.get_xlim3d()
     y_limits = ax.get_ylim3d()
     z_limits = ax.get_zlim3d()
@@ -63,31 +59,38 @@ def set_axes_equal(ax):
     ax.set_zlim3d([z_middle - plot_radius, z_middle + plot_radius])
 
 
-def draw(ax, item, *args, **kwargs):
+def draw(ax, item_cat, item, *args, **kwargs):
     """Displays a generic object
-      Note: It is required to setup a figure before calling draw() function."""
 
+      Args:
+        - ax (matplotlib.axes._subplots.Axes3DSubplot): an axes to draw the item on
+        - item_cat (str): Select a category: "point", "arrow", of "frame" 
+        - item (numpy.ndarray): The item to be drawn on ax
+
+      Returns:
+        None
+
+      Note: 
+        -It is required to setup a figure before calling draw() function."""
     position = kwargs.get('position')
     color = kwargs.get('color')
-    if isinstance(item, rl.Frame):
-        drawFrame(ax, item, position)
-    else:
-        # drawPoint(ax, item) # TODO: Add drawPoint() funciton
-        if position is None:
-            drawPoint(ax, item, color)
-        else:
-            drawArrow(ax, item, position, color)
+    show_axis = kwargs.get('show_axis')
+
+    if item_cat == "frame": 
+        drawFrame(ax, item, position, show_axis=show_axis)
+    elif item_cat == "arrow":
+        drawArrow(ax, item, position, color)
+    elif item_cat == "point":
+        drawPoint(ax, item, color)
 
 
 def drawPoint(ax, vector, color):
     """Displays a 3D point indicated by a vector relative to origin of ax"""
-    
     ax.plot(vector[0], vector[1], vector[2], 'o', color=color)
 
 
 def drawArrow(ax, vector, position, color):
     """Displays a 3D vector at a given position"""
-
     a = position
     b = position + vector
     # A standard line plot behind the Arrow3D.
@@ -99,14 +102,19 @@ def drawArrow(ax, vector, position, color):
     ax.add_artist(arrow)
 
 
-def drawFrame(ax, frame, position):
+def drawFrame(ax, frame, position, *args, **kwargs):
     """Displays a 3D frame (i.e., rotation matrix) at a given position
       The frame is right-handed and color-coded:
     
       - Red axis: :math:`\hat{x}`
       - Green axis: :math:`\hat{y}`
       - Blue axis: :math:`\hat{z}`"""
-
-    drawArrow(ax, frame.rotation_matrix[:,0], position, 'r')
-    drawArrow(ax, frame.rotation_matrix[:,1], position, 'g')
-    drawArrow(ax, frame.rotation_matrix[:,2], position, 'b')
+    show_axis = kwargs.get('show_axis')
+    if show_axis is None:
+        show_axis = np.array([1,1,1])
+    if show_axis[0]:
+        drawArrow(ax, frame[:,0], position, 'r')
+    if show_axis[1]:
+        drawArrow(ax, frame[:,1], position, 'g')
+    if show_axis[2]:
+        drawArrow(ax, frame[:,2], position, 'b')
