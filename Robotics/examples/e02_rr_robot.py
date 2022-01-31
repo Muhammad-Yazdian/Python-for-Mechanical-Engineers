@@ -28,6 +28,8 @@ p0 = np.array([0,0,0])
 p1 = np.matmul(frame_01, np.array([LINK1,0,0]))
 p2 = np.matmul(frame_01, np.array([LINK1,0,0] + np.matmul(frame_12, np.array([LINK2,0,0]))))
 
+trans_01 = rl.transformationMatrix(0, 1, 0, -10)
+
 # Display contents
 fig = plt.figure()
 ax = plt.axes(projection='3d')
@@ -36,5 +38,6 @@ gl.draw(ax, 'frame', frame_01, position=p1)
 gl.draw(ax, 'frame', frame_02, position=p2)
 plt.plot((p0[0], p1[0]), (p0[1], p1[1]),(p0[2], p1[2]),'k')
 plt.plot((p1[0], p2[0]), (p1[1], p2[1]),(p1[2], p2[2]),'k')
+gl.draw(ax, 'trans', trans_01)
 gl.set_axes_equal(ax)
 plt.show()
