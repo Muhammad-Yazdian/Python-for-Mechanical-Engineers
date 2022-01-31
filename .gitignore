@@ -8,3 +8,9 @@ Robotics/examples/__pycache__/graphiclib_path.cpython-37.pyc
 Robotics/libs/__pycache__/mathlib_path.cpython-37.pyc
 utils/math/__pycache__/mathlib.cpython-37.pyc
 utils/viz/examples/__pycache__/mathlib_path.cpython-37.pyc
+sphinx_pup_guide.txt
+docs/
+__pycache__/robot_fk7.cpython-37.pyc
+__pycache__/robot_ik7.cpython-37.pyc
+__pycache__/roboticlib.cpython-37.pyc
+Robotics/libs/__pycache__/robot_ik7.cpython-37.pyc
