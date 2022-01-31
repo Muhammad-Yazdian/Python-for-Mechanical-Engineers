@@ -76,12 +76,14 @@ def draw(ax, item_cat, item, *args, **kwargs):
     color = kwargs.get('color')
     show_axis = kwargs.get('show_axis')
 
-    if item_cat == "frame": 
-        drawFrame(ax, item, position, show_axis=show_axis)
+    if item_cat == "point": 
+        drawPoint(ax, item, color)
     elif item_cat == "arrow":
         drawArrow(ax, item, position, color)
-    elif item_cat == "point":
-        drawPoint(ax, item, color)
+    elif item_cat == "frame":
+        drawFrame(ax, item, position, show_axis=show_axis)
+    elif item_cat == "trans":
+        drawTransformationMatrix(ax, item)
 
 
 def drawPoint(ax, vector, color):
@@ -118,3 +120,6 @@ def drawFrame(ax, frame, position, *args, **kwargs):
         drawArrow(ax, frame[:,1], position, 'g')
     if show_axis[2]:
         drawArrow(ax, frame[:,2], position, 'b')
+
+def drawTransformationMatrix(ax, transformation_matrix):
+    drawFrame(ax, transformation_matrix[0:3,0:3], transformation_matrix[0:3,3])
