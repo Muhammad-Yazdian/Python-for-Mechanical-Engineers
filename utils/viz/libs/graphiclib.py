@@ -51,17 +51,18 @@ def drawFrame(ax, frame, position, *args, **kwargs):
 
 
 class Arrow3D(FancyArrowPatch):
-    """Construct a 3D arrow based on matplotlib's FancyArrowPatch
-      By @tacaswell, 2021: https://github.com/matplotlib/matplotlib/issues/21688
-      By @tacaswell, 2015: 
-        https://stackoverflow.com/a/29188796
-        https://stackoverflow.com/questions/11140163/plotting-a-3d-cube-a-sphere-and-a-vector-in-matplotlib"""
+    """Constructs a 3D arrow based on matplotlib's FancyArrowPatch
+
+      Author(s):
+
+      - tacaswell, 2021 @ https://github.com/matplotlib/matplotlib/issues/21688"""
         
     def __init__(self, xs, ys, zs, *args, **kwargs):
         super().__init__((0,0), (0,0), *args, **kwargs)
         self._verts3d = xs, ys, zs
 
     def draw(self, renderer):
+        """3D draw method"""
         xs3d, ys3d, zs3d = self._verts3d
         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
         self.set_positions((xs[0],ys[0]),(xs[1],ys[1]))
@@ -75,18 +76,17 @@ class Arrow3D(FancyArrowPatch):
 
 
 def setAxesEqual3D(ax):
-    '''Make axes of 3D plot have equal scale so that spheres appear as spheres,
+    """Make axes of 3D plot have equal scale so that spheres appear as spheres,
       cubes as cubes, etc..  This is one possible solution to Matplotlib's
       ax.set_aspect('equal') and ax.axis('equal') not working for 3D.
 
-      Input:
-        ax: a matplotlib axis, e.g., as output from plt.gca().
-    
-      Author(s): 
-        - Karlo (2015) and Trenton McKinney (2021)
+      Author(s):
 
-      Source:
-        https://stackoverflow.com/questions/13685386/matplotlib-equal-unit-length-with-equal-aspect-ratio-z-axis-is-not-equal-to'''
+        - Karlo (2015) and Trenton McKinney (2021) @ https://stackoverflow.com/questions/13685386/matplotlib-equal-unit-length-with-equal-aspect-ratio-z-axis-is-not-equal-to
+
+      Args:
+        - ax: a matplotlib axis (e.g., plt.gca())
+      """
     x_limits = ax.get_xlim3d()
     y_limits = ax.get_ylim3d()
     z_limits = ax.get_zlim3d()
