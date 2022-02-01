@@ -1,5 +1,5 @@
 #=========================================================
-# e02_frame.py
+# example_3D_2_frame.py
 # 
 # A simple example for drawing 3D frames using graphiclib
 #
@@ -7,7 +7,7 @@
 #   Seied Muhammad Yazdian
 # 
 # Last update:
-#   Jan 30, 2022
+#   Feb 1, 2022
 #=========================================================
   
 import numpy as np

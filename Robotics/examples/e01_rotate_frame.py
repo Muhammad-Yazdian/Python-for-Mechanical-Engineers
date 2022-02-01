@@ -3,7 +3,11 @@
 # 
 # A simple example for drawing rotation matrix
 #
-# Seied Muhammad Yazdian | Jan 30, 2022
+# Author(s):
+#   Seied Muhammad Yazdian
+# 
+# Last update:
+#   Feb 1, 2022
 #=========================================================
 
 import roboticlib_path

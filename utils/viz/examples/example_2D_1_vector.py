@@ -1,9 +1,9 @@
 #=========================================================
-# e02_frame.py
+# example_2D_1_vector.py
 # 
 # A simple example for drawing 2D vectors using graphiclib
 #
-# # Author(s):
+# Author(s):
 #   Seied Muhammad Yazdian
 # 
 # Last update:

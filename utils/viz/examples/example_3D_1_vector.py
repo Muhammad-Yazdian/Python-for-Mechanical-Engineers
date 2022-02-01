@@ -1,5 +1,5 @@
 #=========================================================
-# e01_vector.py
+# example_3D_1_vector.py
 # 
 # A simple example for drawing 3D vectors using graphiclib
 # 

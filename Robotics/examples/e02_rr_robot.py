@@ -3,7 +3,11 @@
 # 
 # A simple example for drawing a RR robot
 #
-# Seied Muhammad Yazdian | Jan 30, 2022
+# Author(s):
+#   Seied Muhammad Yazdian
+# 
+# Last update:
+#   Feb 1, 2022
 #=========================================================
 
 import numpy as np
