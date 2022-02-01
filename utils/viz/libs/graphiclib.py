@@ -1,32 +1,80 @@
-"""Graphical library provides tools for displaying 3D vector, frames, and more.
-  
-    Seied Muhammad Yazdian | Jan 29, 2022
-
-    muhammad.yazdian@gmail.com"""
+"""Graphical tools for drawing 2D and 3D vector, frames, and more."""
+# By Seied Muhammad Yazdian | Feb 1s, 2022
 
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d, Axes3D
 
+def drawArrow(ax, vector, position, *args, **kwargs):
+    """Draw a 2D arrow on xy plane
+    
+      Args:
+        - ax (matplotlib.axes): an axes to draw the item on
+        - position (numpy.ndarray): Start position (2x1, 3x1, or nx1)
+        - vector (numpy.ndarray): Vector (2x1, 3x1, or nx1)"""
+    color = kwargs.get('color')
+    if color is None:
+        color = 'k'
+    # FIXME: To solve the auto zoom issue with quiver, I put two frames on top
+    # of each other. The first part can be removed if you can find a better
+    # solution for auto zooming of quiver
+    ax.plot([position[0], position[0] + vector[0]], 
+            [position[1], position[1] + vector[1]], 
+            color=color)
+    ax.quiver(position[0], position[1], 
+              vector[0], vector[1],
+              scale=1, scale_units='xy', angles='xy', color=color)
+
+def drawFrame(ax, frame, position, *args, **kwargs):
+    """Draw a 2D frame on xy plane
+    
+      Args:
+        - ax (matplotlib.axes): an axes to draw the item on
+        - frame (numpy.ndarray): 2x2, 3x3, or nxn rotation matrix (only xy elemets are used)
+        - position (numpy.ndarray): 2x1, 3x1, or nx1 position vector (only xy element are used)"""
+    color = kwargs.get('color')
+    if color is None:
+        color = ['r', 'g']
+    # FIXME: To solve the auto zoom issue with quiver, I put two frames on top
+    # of each other. The first part can be removed if you can find a better
+    # solution for auto zooming of quiver
+    ax.plot([position[0], position[0]+frame[0,0]], 
+            [position[1], position[1]+frame[1,0]], 
+            color=color[0])
+    ax.plot([position[0], position[0]+frame[0,1]], 
+            [position[1], position[1]+frame[1,1]],
+            color=color[1])
+    origin = np.array([[position[0], position[0]],[position[1], position[1]]])
+    ax.quiver(*origin, frame[0, 0:2], frame[1, 0:2],
+              scale=1, scale_units='xy', angles='xy', color=color)
+
 
 class Arrow3D(FancyArrowPatch):
     """Construct a 3D arrow based on matplotlib's FancyArrowPatch
-
-      More information:
+      By @tacaswell, 2021: https://github.com/matplotlib/matplotlib/issues/21688
+      By @tacaswell, 2015: 
+        https://stackoverflow.com/a/29188796
         https://stackoverflow.com/questions/11140163/plotting-a-3d-cube-a-sphere-and-a-vector-in-matplotlib"""
+        
     def __init__(self, xs, ys, zs, *args, **kwargs):
-        FancyArrowPatch.__init__(self, (0, 0), (0, 0), *args, **kwargs)
+        super().__init__((0,0), (0,0), *args, **kwargs)
         self._verts3d = xs, ys, zs
 
     def draw(self, renderer):
         xs3d, ys3d, zs3d = self._verts3d
         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
-        self.set_positions((xs[0], ys[0]), (xs[1], ys[1]))
+        self.set_positions((xs[0],ys[0]),(xs[1],ys[1]))
         FancyArrowPatch.draw(self, renderer)
+    
+    def do_3d_projection(self, renderer=None):
+        xs3d, ys3d, zs3d = self._verts3d
+        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)
+        self.set_positions((xs[0],ys[0]),(xs[1],ys[1]))
+        return np.min(zs)
 
 
-def set_axes_equal(ax):
+def setAxesEqual3D(ax):
     '''Make axes of 3D plot have equal scale so that spheres appear as spheres,
       cubes as cubes, etc..  This is one possible solution to Matplotlib's
       ax.set_aspect('equal') and ax.axis('equal') not working for 3D.
@@ -59,7 +107,7 @@ def set_axes_equal(ax):
     ax.set_zlim3d([z_middle - plot_radius, z_middle + plot_radius])
 
 
-def draw(ax, item_cat, item, *args, **kwargs):
+def draw3D(ax, item_cat, item, *args, **kwargs):
     """Displays a generic object
 
       Args:
@@ -77,21 +125,21 @@ def draw(ax, item_cat, item, *args, **kwargs):
     show_axis = kwargs.get('show_axis')
 
     if item_cat == "point": 
-        drawPoint(ax, item, color)
+        drawPoint3D(ax, item, color)
     elif item_cat == "arrow":
-        drawArrow(ax, item, position, color)
+        drawArrow3D(ax, item, position, color)
     elif item_cat == "frame":
-        drawFrame(ax, item, position, show_axis=show_axis)
+        drawFrame3D(ax, item, position, show_axis=show_axis)
     elif item_cat == "trans":
-        drawTransformationMatrix(ax, item)
+        drawTransformationMatrix3D(ax, item)
 
 
-def drawPoint(ax, vector, color):
+def drawPoint3D(ax, vector, color):
     """Displays a 3D point indicated by a vector relative to origin of ax"""
     ax.plot(vector[0], vector[1], vector[2], 'o', color=color)
 
 
-def drawArrow(ax, vector, position, color):
+def drawArrow3D(ax, vector, position, color):
     """Displays a 3D vector at a given position"""
     a = position
     b = position + vector
@@ -104,7 +152,7 @@ def drawArrow(ax, vector, position, color):
     ax.add_artist(arrow)
 
 
-def drawFrame(ax, frame, position, *args, **kwargs):
+def drawFrame3D(ax, frame, position, *args, **kwargs):
     """Displays a 3D frame (i.e., rotation matrix) at a given position
       The frame is right-handed and color-coded:
     
@@ -115,11 +163,14 @@ def drawFrame(ax, frame, position, *args, **kwargs):
     if show_axis is None:
         show_axis = np.array([1,1,1])
     if show_axis[0]:
-        drawArrow(ax, frame[:,0], position, 'r')
+        drawArrow3D(ax, frame[:,0], position, 'r')
     if show_axis[1]:
-        drawArrow(ax, frame[:,1], position, 'g')
+        drawArrow3D(ax, frame[:,1], position, 'g')
     if show_axis[2]:
-        drawArrow(ax, frame[:,2], position, 'b')
+        drawArrow3D(ax, frame[:,2], position, 'b')
 
-def drawTransformationMatrix(ax, transformation_matrix):
-    drawFrame(ax, transformation_matrix[0:3,0:3], transformation_matrix[0:3,3])
+
+def drawTransformationMatrix3D(ax, transformation_matrix):
+    """Draw a 4x4 transformation matrix using its orientation (R) and position (p)"""
+    drawFrame3D(
+        ax, transformation_matrix[0:3, 0:3], transformation_matrix[0:3, 3])
