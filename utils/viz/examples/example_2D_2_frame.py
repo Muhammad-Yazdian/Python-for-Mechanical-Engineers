@@ -1,15 +1,15 @@
 #=========================================================
 # example_2D_2_frame.py
-# 
+#
 # A simple example for drawing 2D frames using graphiclib
-# 
+#
 # Author(s):
 #   Seied Muhammad Yazdian
-# 
+#
 # Last update:
 #   Feb 1, 2022
 #=========================================================
-  
+
 import numpy as np
 import matplotlib.pyplot as plt
 import graphiclib_path
@@ -24,7 +24,7 @@ frame_1 = ml.rotatoinMatixZ(10)
 # Display contents
 fig = plt.figure()
 ax = plt.axes()
-gl.drawFrame(ax, frame_1, point_0, color=['k','k'])
+gl.drawFrame(ax, frame_1, point_0, color=['k', 'k'])
 gl.drawFrame(ax, -frame_1, point_1)
 ax.set_aspect('equal')
 plt.show()

@@ -1,11 +1,11 @@
 #=========================================================
 # example_3D_1_vector.py
-# 
+#
 # A simple example for drawing 3D vectors using graphiclib
-# 
+#
 # Author(s):
 #   Seied Muhammad Yazdian
-# 
+#
 # Last update:
 #   Feb 1, 2022
 #=========================================================
@@ -16,7 +16,7 @@ import graphiclib_path
 import graphiclib as gl
 
 # Create some 3D points
-point__a = np.array([0.0, 0, 0]) 
+point__a = np.array([0.0, 0, 0])
 point__b = np.array([3.0, 0, 1])
 point__c = np.array([0.0, 2, 0])
 

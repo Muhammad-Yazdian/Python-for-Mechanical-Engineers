@@ -1,15 +1,15 @@
 #=========================================================
 # example_3D_2_frame.py
-# 
+#
 # A simple example for drawing 3D frames using graphiclib
 #
 # Author(s):
 #   Seied Muhammad Yazdian
-# 
+#
 # Last update:
 #   Feb 1, 2022
 #=========================================================
-  
+
 import numpy as np
 import matplotlib.pyplot as plt
 import graphiclib_path
