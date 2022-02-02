@@ -9,8 +9,8 @@ subjects:
 - Haptics
 
 ## Features
-- Utilities for basic mathematical operations
-- Utilities for basic visualizations
+- Utilities for basic mathematical operations (mathlib)
+- Utilities for basic visualizations (graphiclib)
 
 ## Documentation
 - Reference manual
