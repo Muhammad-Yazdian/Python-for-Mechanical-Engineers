@@ -3,9 +3,9 @@ A collection of useful libraries for solving mechanical problems in different
 subjects:
 - FEM
 - Statics
-- Dynamics
+- [Dynamics](Dynamics)
 - Control
-- Robotics
+- [Robotics](Robotics)
 - Haptics
 
 ## Features
