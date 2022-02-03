@@ -1,5 +1,5 @@
 # Python for Mechanical Engineers
-A collection of useful libraries for solving mechanical problems in different 
+A collection of useful libraries for solving mechanical problems in different
 subjects:
 - FEM
 - Statics
@@ -9,11 +9,11 @@ subjects:
 - Haptics
 
 ## Features
-- Utilities for basic mathematical operations (mathlib)
-- Utilities for basic visualizations (graphiclib)
-
-## Documentation
-- Reference manual
+- Many simple examples to get you started
+- `mathlib`: A basic Pyhton library for solving most common mathematical
+problems in Mechanical Engineering field
+- `Utilities`: A high-quality visualization library for creating 2D and 3D
+graphical plots
 
 ## For Contributors
 - How to contribute?
@@ -41,6 +41,7 @@ subjects:
     import numpy; print(numpy.version.version)
     # or
     import numpy; print (numpy.__version__)
+    ```
     ```
     pip install --upgrade numpy
     ```
