@@ -1,6 +1,10 @@
-"""Graphical tools for drawing 2D and 3D vector, frames, and more."""
+"""Graphical tools for drawing 2D and 3D vector, frames, and more.
+    
+    For more advanced plots one can use PyQtGraph
+        - https://www.pyqtgraph.org/
+  """
 # By Seied Muhammad Yazdian | Feb 1s, 2022
-
+# TODO: Add PyQTGraph https://www.pyqtgraph.org/
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch

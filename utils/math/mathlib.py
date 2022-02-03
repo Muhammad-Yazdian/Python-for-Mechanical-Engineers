@@ -1,8 +1,5 @@
 """**Basic mathematics for matrix operation**
 
-  - Author: S.M. Yazdian
-  - Date: 2022
-
   Features:
     - Based on NumPy
 
@@ -14,7 +11,9 @@
     
         import mathlib as ml
         alpha = 30 # (deg)
-        rot_x = ml.rotatoinMatixX(alpha)"""
+        rot_x = ml.rotatoinMatixX(alpha)
+  """
+# By Seied Muhammad Yazdian | Feb 1s, 2022
 
 import numpy as np
 
