@@ -1,5 +1,5 @@
 #===============================================================================
-# e02_rr_robot.py
+# e02_2DOF_RR_robot.py
 #
 # A simple example for drawing a RR robot
 #

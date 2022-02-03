@@ -1,5 +1,5 @@
 #===============================================================================
-# e02_rr_robot.py
+# e03_2DOF_RR_DH_array.py
 #
 # A simple example for drawing a RR robot using its DH array
 #
