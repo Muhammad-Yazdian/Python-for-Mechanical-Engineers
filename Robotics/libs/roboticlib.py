@@ -1,10 +1,7 @@
 """**Basic Mathematics for Robotics**
 
-  - Author: S.M. Yazdian
-  - Date: 2022
-
-  Features:
-    - Based on NumPy
+    Features:
+        - Based on NumPy
 
   Usage:
     Use *rl* namespace when importing roboticlib. 
@@ -16,9 +13,14 @@
         alpha = 30 # (deg)
         rot_x = rl.rotatoinMatixX(alpha)"""
 
+# By Seied Muhammad Yazdian | Feb 1s, 2022
+
 import numpy as np
+from numpy import genfromtxt
 import mathlib_path
 import mathlib as ml
+import graphiclib_path
+import graphiclib as gl
 
 def rotatoinMatixX(theta):
     r"""Returns the rotation matrix of a frame rotated by :math:`\theta` degrees about x axis
@@ -54,7 +56,7 @@ def rotatoinMatixY(theta):
         c_\theta & 0 & s_\theta\\ 
         0 & 1 & 0\\
         -s_\theta & 0 & c_\theta
-        \end{bmatrix} """
+        \end{bmatrix}"""
     return ml.rotatoinMatixY(theta)
 
 
@@ -73,7 +75,7 @@ def rotatoinMatixZ(theta):
             c_\theta & -s_\theta &  0\\ 
             s_\theta &  c_\theta & 0\\ 
             0 & 0 & 1
-            \end{bmatrix} """
+            \end{bmatrix}"""
     return ml.rotatoinMatixZ(theta)
 
 
@@ -93,7 +95,7 @@ def rotatoinMatixJoint(alpha, theta):
           c_\theta & -s_\theta c_\alpha & s_\theta s_\alpha\\ 
           s_\theta & c_\theta c_\alpha & -c_\theta s_\alpha\\ 
           0 & s_\alpha & c_\alpha
-          \end{bmatrix} """
+          \end{bmatrix}"""
     ct = np.cos(np.radians(theta))
     st = np.sin(np.radians(theta))
     ca = np.cos(np.radians(alpha))
@@ -123,7 +125,7 @@ def transformationMatrix(a, d, alpha, theta):
               s_\theta & c_\theta c_\alpha & -c_\theta s_\alpha & a s_\theta\\ 
               0 & s_\alpha & c_\alpha & d\\ 
               0 & 0 & 0 & 1
-              \end{bmatrix} """
+              \end{bmatrix}"""
     ct = np.cos(np.radians(theta))
     st = np.sin(np.radians(theta))
     ca = np.cos(np.radians(alpha))
@@ -132,3 +134,83 @@ def transformationMatrix(a, d, alpha, theta):
                     [st,  ct*ca, -ct*sa,  a*st],
                     [0,   sa,     ca,     d],
                     [0,   0,      0,      1]])
+
+
+def fk(DH_parameters):
+    """Returns endeffector transformation matrix based on DH parameters
+
+      Args:
+        - DH_parameters (numpy.ndarray): Whole DH table
+
+      Returns:
+        numpy.ndarray: Endeffector transformation matrix
+      """
+    trans_0_previous = np.identity(4)
+    for i in range(DH_parameters.shape[0]):
+        row = DH_parameters[i]
+        trans_previous_current = transformationMatrix(
+            row[0], row[1], row[2], row[3])
+        trans_0_current = np.matmul(trans_0_previous, trans_previous_current)
+        trans_0_previous = trans_0_current
+    return trans_0_current
+
+
+def fkAllJoints(DH_parameters):
+    """Returns transformation matrix of all joints based on DH parameters
+
+      Args:
+        - DH_parameters (numpy.ndarray): Whole DH table
+
+      Returns:
+        numpy.ndarray: T matrix of all joints
+      """
+    trans_0_previous = np.identity(4)
+    trans_0_joint_all = trans_0_previous
+    for i in range(DH_parameters.shape[0]):
+        row = DH_parameters[i]
+        trans_previous_current = transformationMatrix(
+            row[0], row[1], row[2], row[3])
+        trans_0_current = np.matmul(trans_0_previous, trans_previous_current)
+        if i == 0:
+            trans_0_joint_all = np.stack(
+                (trans_0_joint_all, trans_0_current), axis=0)
+        else:
+            # TODO: Combine np.append with the np.stack to remove if statement
+            trans_0_joint_all = np.append(
+                trans_0_joint_all, trans_0_current[np.newaxis, :], axis=0)
+        trans_0_previous = trans_0_current
+    return trans_0_joint_all
+
+
+class Robot:
+    """Creates a robot object with fk and draw functionalities
+
+      Args:
+        - DH_parameters (numpy.ndarray): Whole DH table
+      """
+    # TODO: Add a function with joint angle values as param and updates transformation_matrix_all
+    def __init__(self, dh_param_file):
+        self.dh_array = genfromtxt(dh_param_file, delimiter=',')[:,1:5]
+        self.transformation_matrix_all = fkAllJoints(self.dh_array)
+    
+
+    def angles(self, theta):
+        """Update robot joint angles
+
+          Args:
+            - theta (list): Joint angles
+        """
+        self.dh_array[:,3] = theta
+        self.transformation_matrix_all = fkAllJoints(self.dh_array)
+
+      
+    def draw(self, ax):
+        # transformation_matrix_all = fkAllJoints(self.dh_array)
+        i = 0
+        p_a = self.transformation_matrix_all[i, 0:3, 3]
+        for i in range(self.transformation_matrix_all.shape[0]):
+            gl.draw3D(ax, 'trans', self.transformation_matrix_all[i])
+            if i > 0:
+                p_b = self.transformation_matrix_all[i, 0:3, 3]
+                gl.draw3D(ax, 'arrow', p_b-p_a, position=p_a, color='k')
+                p_a = p_b
