@@ -13,10 +13,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 TOTAL_TIME = 15 # (seconds)
-
 # fig = plt.figure(); ax = plt.axes()
 fig, ax = plt.subplots()
-
 for time in range(TOTAL_TIME+1):
     theta = np.radians(6*time)
     x = np.sin(theta)
@@ -28,5 +26,4 @@ for time in range(TOTAL_TIME+1):
     ax.set(aspect='equal', xlim=(-1.5, 1.5), ylim=(-1.5, 1.5))
     ax.grid(True)
     plt.pause(1)
-
 plt.show()

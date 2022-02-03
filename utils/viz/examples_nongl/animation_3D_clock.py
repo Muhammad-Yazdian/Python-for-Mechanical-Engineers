@@ -13,10 +13,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 TOTAL_TIME = 60  # (seconds)
-
 fig = plt.figure()
 ax = plt.axes(projection='3d')
-
 for time in range(TOTAL_TIME+1):
     theta = np.radians(6*time)
     x = np.sin(theta)
@@ -31,5 +29,4 @@ for time in range(TOTAL_TIME+1):
     ax.set(xlim=(-1.5, 1.5), ylim=(-1.5, 1.5), zlim=(-1.5, 1.5))
     # ax.grid(True)
     plt.pause(1/60)
-
 plt.show()
