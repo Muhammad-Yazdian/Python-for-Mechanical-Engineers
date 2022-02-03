@@ -22,12 +22,9 @@ import time
 
 path = os.path.dirname( __file__ ) + '/e04_6DOF_DH_file.csv'
 robot = rl.Robot(path)
-
 fig = plt.figure()
 ax = plt.axes(projection='3d')
-
 num_steps = 10
-
 for step in range(num_steps):
     theta_final = np.array([10, 10, 10, 10, 10, 10]) * 2
     theta = theta_final * step/num_steps
