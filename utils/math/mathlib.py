@@ -18,8 +18,8 @@
 import numpy as np
 
 
-def rotatoinMatixX(theta):
-  r"""Returns the rotation matrix of a frame rotated by :math:`\theta` degrees about x axis
+def rotatoinMatixX(theta) -> np.ndarray:
+  r"""Returns the 3x3 rotation matrix of a frame rotated by :math:`\theta` degrees about x axis
 
     Args:
       - theta (float): Rotation angle about x axis (deg)
@@ -42,7 +42,7 @@ def rotatoinMatixX(theta):
 
 
 def rotatoinMatixY(theta):
-  r"""Returns the rotation matrix of a frame rotated by :math:`\theta` degrees about y axis
+  r"""Returns the 3x3 rotation matrix of a frame rotated by :math:`\theta` degrees about y axis
 
     Args:
       - theta (float): Rotation angle about y axis (deg)
@@ -65,7 +65,7 @@ def rotatoinMatixY(theta):
 
 
 def rotatoinMatixZ(theta):
-  r"""Returns the rotation matrix of a frame rotated by :math:`\theta` degrees about z axis
+  r"""Returns the 3x3 rotation matrix of a frame rotated by :math:`\theta` degrees about z axis
 
     Args:
       - theta (float): Rotation angle about z axis (deg)
