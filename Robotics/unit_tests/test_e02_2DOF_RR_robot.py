@@ -1,5 +1,5 @@
 #===============================================================================
-# A unit test for example for e02_2DOF_RR_robot.py example
+# A unit test for e02_2DOF_RR_robot.py example
 # 
 # NOTE: The entire example is copied into this file!
 #
