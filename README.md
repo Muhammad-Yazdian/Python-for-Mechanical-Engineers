@@ -45,3 +45,8 @@ graphical plots
     ```
     pip install --upgrade numpy
     ```
+- SciPy: 1.5.4
+    ```python
+    import scipy; print (scipy.__version__)
+    ```
+
