@@ -1,6 +1,8 @@
 # Python for Mechanical Engineers - Robotics
 A collection of useful libraries for solving robotic problems
 
+[[/res/img/rrr_robot.gif]]
+
 ## Features
 - Many simple examples to get you started
 - `roboticlib`: A basic Pyhton library for creating and simulating robots
