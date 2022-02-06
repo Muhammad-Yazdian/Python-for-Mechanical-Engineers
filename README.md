@@ -8,6 +8,8 @@ subjects:
 - [Robotics](Robotics)
 - Haptics
 
+![alt text](/Robotics/res/img/rrr_robot.gif)
+
 ## Features
 - Many simple examples to get you started
 - `mathlib`: A basic Pyhton library for solving most common mathematical
