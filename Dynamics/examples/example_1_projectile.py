@@ -1,13 +1,14 @@
 #===============================================================================
 # example_1_projectile.py
 #
-# Drawing the velocity of a projectile on its path
+# Simulating the 2D motion of a projectile using Euler algorithm and drawing
+# its velocity vector on its path 
 #
 # Author(s):
 #   Seied Muhammad Yazdian
 #
 # Last update:
-#   Feb 1, 2022
+#   Feb 5, 2022
 #===============================================================================
 
 import numpy as np
@@ -32,9 +33,9 @@ ax = plt.axes()
 gl.drawArrow(ax, [v_x, v_y], [0, 0])
 
 for i in range(num_steps):
-    x = x + v_x * dt
-    v_y = v_y + g * dt
-    y = y + v_y * dt
+    x += v_x * dt
+    y += v_y * dt # Compute position before updating velocity
+    v_y += g * dt
     gl.drawArrow(ax, [v_x, v_y], [x, y])
     t = t + dt
 
