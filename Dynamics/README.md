@@ -3,6 +3,5 @@ A collection of simple examples for solving dynamic problems
 
 ## Examples
 ### Projectile Motion
-[[/res/img/example_1.png]]
-- example_1_projectile.py
-- example_2_projectile.py
+![alt text](/Dynamics/res/img/example_1.png)
+examples [1](/Dynamics/examples/example_1_projectile.py) and [2](/Dynamics/examples/example_2_projectile.py)
