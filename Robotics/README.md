@@ -1,7 +1,7 @@
 # Python for Mechanical Engineers - Robotics
 A collection of useful libraries for solving robotic problems
 
-![alt text](Robotics/res/img/rrr_robot.gif)
+![alt text](/Robotics/res/img/rrr_robot.gif)
 
 ## Features
 - Many simple examples to get you started
