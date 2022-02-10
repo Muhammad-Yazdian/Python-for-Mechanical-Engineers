@@ -188,7 +188,7 @@ class Robot:
       Args:
         - DH_parameters (numpy.ndarray): Whole DH table
       """
-    # TODO: Add a function with joint angle values as param and updates transformation_matrix_all
+
     def __init__(self, dh_param_file):
         self.dh_array = genfromtxt(dh_param_file, delimiter=',')[:,1:5]
         self.transformation_matrix_all = fkAllJoints(self.dh_array)
@@ -199,7 +199,7 @@ class Robot:
 
           Args:
             - theta (list): Joint angles
-        """
+         """
         self.dh_array[:,3] = theta
         self.transformation_matrix_all = fkAllJoints(self.dh_array)
 
