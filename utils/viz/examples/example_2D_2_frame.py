@@ -19,7 +19,7 @@ import mathlib as ml
 
 point_0 = np.array([0.0, 0, 0])
 point_1 = np.array([6.0, 8, 0])
-frame_1 = ml.rotatoinMatixZ(10)
+frame_1 = ml.rotation_matrix_z(10)
 
 # Display contents
 fig = plt.figure()

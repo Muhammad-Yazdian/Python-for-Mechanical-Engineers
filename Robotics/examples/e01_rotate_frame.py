@@ -14,11 +14,11 @@ import roboticlib_path
 import roboticlib as rl
 
 theta = float(0)
-rot_mat_1 = rl.rotatoinMatixZ(theta)
+rot_mat_1 = rl.rotation_matrix_z(theta)
 print('Rx = \n', rot_mat_1)
 
 theta = float(10)
-rot_mat_2 = rl.rotatoinMatixZ(theta)
+rot_mat_2 = rl.rotation_matrix_z(theta)
 print('Rx = \n', rot_mat_2)
 
 # Display contents

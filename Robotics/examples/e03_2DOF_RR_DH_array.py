@@ -29,10 +29,10 @@ DH_alpha = [0.0, 0.0]
 DH_theta = [theta_1, theta_2]
 DH_table = np.transpose([DH_a, DH_d, DH_alpha, DH_theta])
 
-endeffector_transformation_matrix = rl.fk(DH_table)
+endeffector_transformation_matrix = rl.forward_kinematics(DH_table)
 endeffector_position = endeffector_transformation_matrix[0:3, 3]
 
-transformation_matrix_all = rl.fkAllJoints(DH_table)
+transformation_matrix_all = rl.forward_kinematics_all_joints(DH_table)
 
 p0 = transformation_matrix_all[0, 0:3, 3]
 p1 = transformation_matrix_all[1, 0:3, 3]

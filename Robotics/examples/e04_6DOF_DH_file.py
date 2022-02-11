@@ -35,9 +35,9 @@ def drawRobot():
 
 path = os.path.dirname(__file__) + '/e04_6DOF_DH_file.csv'
 DH_table = genfromtxt(path, delimiter=',')[:, 1:5]
-endeffector_transformation_matrix = rl.fk(DH_table)
+endeffector_transformation_matrix = rl.forward_kinematics(DH_table)
 endeffector_position = endeffector_transformation_matrix[0:3, 3]
-transformation_matrix_all = rl.fkAllJoints(DH_table)
+transformation_matrix_all = rl.forward_kinematics_all_joints(DH_table)
 
 # Display contents
 fig = plt.figure()

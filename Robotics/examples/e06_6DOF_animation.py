@@ -34,5 +34,5 @@ for step in range(num_steps):
     plt.cla()
     robot.draw(ax)
     gl.setAxesEqual3D(ax)
-    plt.pause(1)
+    plt.pause(0.03)
 plt.show()
