@@ -1,5 +1,5 @@
 #===============================================================================
-# Tests roboticlib rotatoin matrices
+# Tests roboticlib rotation matrices
 #
 # Author(s):
 #   Seied Muhammad Yazdian
@@ -17,33 +17,33 @@ import roboticlib as rl
 # import unittest
 
 
-def test_rotatoinMatices():
-    # assert rl.rotatoinMatixX(0) == np.identity(3)
-    answer = rl.rotatoinMatixX(0)
+def test_rotationMatices():
+    # assert rl.rotation_matrix_x(0) == np.identity(3)
+    answer = rl.rotation_matrix_x(0)
     key = np.identity(3)
     np.testing.assert_allclose(answer, key, rtol=1e-10, atol=1e-10)
 
-    answer = rl.rotatoinMatixX(90)
+    answer = rl.rotation_matrix_x(90)
     key = np.array([[1, 0, 0],
                     [0, 0, -1],
                     [0, 1, 0]])
     np.testing.assert_allclose(answer, key, rtol=1e-10, atol=1e-10)
 
-    answer = rl.rotatoinMatixY(0)
+    answer = rl.rotation_matrix_y(0)
     key = np.identity(3)
     np.testing.assert_allclose(answer, key, rtol=1e-10, atol=1e-10)
 
-    answer = rl.rotatoinMatixY(90)
+    answer = rl.rotation_matrix_y(90)
     key = np.array([[0, 0, 1],
                     [0, 1, 0],
                     [-1, 0, 0]])
     np.testing.assert_allclose(answer, key, rtol=1e-10, atol=1e-10)
 
-    answer = rl.rotatoinMatixZ(0)
+    answer = rl.rotation_matrix_z(0)
     key = np.identity(3)
     np.testing.assert_allclose(answer, key, rtol=1e-10, atol=1e-10)
 
-    answer = rl.rotatoinMatixZ(90)
+    answer = rl.rotation_matrix_z(90)
     key = np.array([[0, -1, 0],
                     [1, 0, 0],
                     [0, 0, 1]])

@@ -11,7 +11,7 @@
 
         import roboticlib as rl
         alpha = 30 # (deg)
-        rot_x = rl.rotatoinMatixX(alpha)"""
+        rot_x = rl.rotation_matrix_x(alpha)"""
 
 # By Seied Muhammad Yazdian | Feb 1s, 2022
 
@@ -22,7 +22,7 @@ import mathlib as ml
 import graphiclib_path
 import graphiclib as gl
 
-def rotatoinMatixX(theta):
+def rotation_matrix_x(theta):
     r"""Returns the rotation matrix of a frame rotated by :math:`\theta` degrees about x axis
 
         Args:
@@ -38,10 +38,10 @@ def rotatoinMatixX(theta):
             0 & c_\theta & -s_\theta\\ 
             0 & s_\theta &  c_\theta
             \end{bmatrix}"""
-    return ml.rotatoinMatixX(theta)
+    return ml.rotation_matrix_x(theta)
 
 
-def rotatoinMatixY(theta):
+def rotation_matrix_y(theta):
     r"""Returns the rotation matrix of a frame rotated by :math:`\theta` degrees about y axis
 
       Args:
@@ -57,10 +57,10 @@ def rotatoinMatixY(theta):
         0 & 1 & 0\\
         -s_\theta & 0 & c_\theta
         \end{bmatrix}"""
-    return ml.rotatoinMatixY(theta)
+    return ml.rotation_matrix_y(theta)
 
 
-def rotatoinMatixZ(theta):
+def rotation_matrix_z(theta):
     r"""Returns the rotation matrix of a frame rotated by :math:`\theta` degrees about z axis
 
       Args:
@@ -76,10 +76,10 @@ def rotatoinMatixZ(theta):
             s_\theta &  c_\theta & 0\\ 
             0 & 0 & 1
             \end{bmatrix}"""
-    return ml.rotatoinMatixZ(theta)
+    return ml.rotation_matrix_z(theta)
 
 
-def rotatoinMatixJoint(alpha, theta):
+def rotation_matrix_joint(alpha, theta):
     r"""Returns joint rotation matrix
 
       Args:
@@ -105,7 +105,7 @@ def rotatoinMatixJoint(alpha, theta):
                     [0, sa, ca]])
 
 
-def transformationMatrix(a, d, alpha, theta):
+def transformation_matrix(a, d, alpha, theta):
     r"""Returns robotic homogeneous transformation matrix (from frame i+1 to
         frame i)
 
@@ -136,7 +136,7 @@ def transformationMatrix(a, d, alpha, theta):
                     [0,   0,      0,      1]])
 
 
-def fk(DH_parameters):
+def forward_kinematics(DH_parameters):
     """Returns endeffector transformation matrix based on DH parameters
 
       Args:
@@ -148,14 +148,14 @@ def fk(DH_parameters):
     trans_0_previous = np.identity(4)
     for i in range(DH_parameters.shape[0]):
         row = DH_parameters[i]
-        trans_previous_current = transformationMatrix(
+        trans_previous_current = transformation_matrix(
             row[0], row[1], row[2], row[3])
         trans_0_current = np.matmul(trans_0_previous, trans_previous_current)
         trans_0_previous = trans_0_current
     return trans_0_current
 
 
-def fkAllJoints(DH_parameters):
+def forward_kinematics_all_joints(DH_parameters):
     """Returns transformation matrix of all joints based on DH parameters
 
       Args:
@@ -168,7 +168,7 @@ def fkAllJoints(DH_parameters):
     trans_0_joint_all = trans_0_previous
     for i in range(DH_parameters.shape[0]):
         row = DH_parameters[i]
-        trans_previous_current = transformationMatrix(
+        trans_previous_current = transformation_matrix(
             row[0], row[1], row[2], row[3])
         trans_0_current = np.matmul(trans_0_previous, trans_previous_current)
         if i == 0:
@@ -191,7 +191,8 @@ class Robot:
 
     def __init__(self, dh_param_file):
         self.dh_array = genfromtxt(dh_param_file, delimiter=',')[:,1:5]
-        self.transformation_matrix_all = fkAllJoints(self.dh_array)
+        self.transformation_matrix_all = forward_kinematics_all_joints(
+            self.dh_array)
     
 
     def angles(self, theta):
@@ -201,7 +202,8 @@ class Robot:
             - theta (list): Joint angles
          """
         self.dh_array[:,3] = theta
-        self.transformation_matrix_all = fkAllJoints(self.dh_array)
+        self.transformation_matrix_all = forward_kinematics_all_joints(
+            self.dh_array)
 
       
     def draw(self, ax):
@@ -214,3 +216,7 @@ class Robot:
                 p_b = self.transformation_matrix_all[i, 0:3, 3]
                 gl.draw3D(ax, 'arrow', p_b-p_a, position=p_a, color='k')
                 p_a = p_b
+
+
+class RobotPuma560:
+    pass

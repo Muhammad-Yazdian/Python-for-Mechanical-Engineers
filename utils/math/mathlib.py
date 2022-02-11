@@ -11,14 +11,14 @@
     
         import mathlib as ml
         alpha = 30 # (deg)
-        rot_x = ml.rotatoinMatixX(alpha)
+        rot_x = ml.rotation_matrix_x(alpha)
   """
 # By Seied Muhammad Yazdian | Feb 1s, 2022
 
 import numpy as np
 
 
-def rotatoinMatixX(theta) -> np.ndarray:
+def rotation_matrix_x(theta) -> np.ndarray:
   r"""Returns the 3x3 rotation matrix of a frame rotated by :math:`\theta` degrees about x axis
 
     Args:
@@ -41,7 +41,7 @@ def rotatoinMatixX(theta) -> np.ndarray:
                     [0, st, ct]])
 
 
-def rotatoinMatixY(theta):
+def rotation_matrix_y(theta):
   r"""Returns the 3x3 rotation matrix of a frame rotated by :math:`\theta` degrees about y axis
 
     Args:
@@ -64,7 +64,7 @@ def rotatoinMatixY(theta):
                     [-st, 0, ct]])
 
 
-def rotatoinMatixZ(theta):
+def rotation_matrix_z(theta):
   r"""Returns the 3x3 rotation matrix of a frame rotated by :math:`\theta` degrees about z axis
 
     Args:

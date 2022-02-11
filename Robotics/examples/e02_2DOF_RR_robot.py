@@ -23,9 +23,9 @@ LINK2 = 2.0
 theta_1 = 10.0
 theta_2 = 20.0
 
-frame_00 = rl.rotatoinMatixZ(0.0)
-frame_01 = rl.rotatoinMatixZ(theta_1)
-frame_12 = rl.rotatoinMatixZ(theta_2)
+frame_00 = rl.rotation_matrix_z(0.0)
+frame_01 = rl.rotation_matrix_z(theta_1)
+frame_12 = rl.rotation_matrix_z(theta_2)
 frame_02 = np.matmul(frame_01, frame_12)
 
 p0 = np.array([0, 0, 0])
@@ -33,7 +33,7 @@ p1 = np.matmul(frame_01, np.array([LINK1, 0, 0]))
 p2 = np.matmul(frame_01, np.array(
     [LINK1, 0, 0] + np.matmul(frame_12, np.array([LINK2, 0, 0]))))
 
-trans_01 = rl.transformationMatrix(0, 1, 0, -10)
+trans_01 = rl.transformation_matrix(0, 1, 0, -10)
 
 # Display contents
 fig = plt.figure()
