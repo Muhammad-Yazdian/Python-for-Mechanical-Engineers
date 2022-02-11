@@ -233,4 +233,27 @@ class RobotPuma560(Robot):
                                   [0.00,   0.00,   90,    0.0],
                                   [0.00,   0.56,   0.0,   0.0]])
 
-    
+    def draw_puma(self, ax):
+        i = 0
+        p_a = self.transformation_matrix_all[i, 0:3, 3]
+        for i in range(self.transformation_matrix_all.shape[0]):
+            # gl.draw3D(ax, 'trans', self.transformation_matrix_all[i])
+            if i > 0:
+                p_b = self.transformation_matrix_all[i, 0:3, 3]
+                if i != 2:
+                    gl.draw3D(ax, 'arrow', p_b-p_a, position=p_a, color='k')
+                else:
+                    dh = self.dh_array
+                    # It is always a positive constant (for Puma)
+                    D2 = dh[1, 1]
+                    # It is always a positive constant (for Puma)
+                    A2 = dh[1, 0]
+                    l1 = np.matmul(
+                        self.transformation_matrix_all[i-1, :3, :3], [0, 0, D2])
+                    l2 = np.matmul(
+                        self.transformation_matrix_all[i, :3, :3], [A2, 0, 0])
+                    gl.draw3D(ax, 'arrow', l1, position=p_a, color='r')
+                    gl.draw3D(ax, 'arrow', l2, position=p_a + l1, color='r')
+                p_a = p_b
+        gl.draw3D(ax, 'trans', self.transformation_matrix_all[0])
+        gl.draw3D(ax, 'trans', self.transformation_matrix_all[-1])
