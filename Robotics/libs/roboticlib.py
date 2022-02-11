@@ -189,10 +189,12 @@ class Robot:
         - DH_parameters (numpy.ndarray): Whole DH table
       """
 
-    def __init__(self, dh_param_file):
-        self.dh_array = genfromtxt(dh_param_file, delimiter=',')[:,1:5]
-        self.transformation_matrix_all = forward_kinematics_all_joints(
-            self.dh_array)
+    def __init__(self, dh_param_file=None):
+        self.dh_array = 0
+        if dh_param_file:
+            self.dh_array = genfromtxt(dh_param_file, delimiter=',')[:,1:5]
+            self.transformation_matrix_all = forward_kinematics_all_joints(
+                self.dh_array)
     
 
     def angles(self, theta):
@@ -206,8 +208,11 @@ class Robot:
             self.dh_array)
 
       
+    def set_dh(self):
+        self.dh_array = 1
+
+    
     def draw(self, ax):
-        # transformation_matrix_all = fkAllJoints(self.dh_array)
         i = 0
         p_a = self.transformation_matrix_all[i, 0:3, 3]
         for i in range(self.transformation_matrix_all.shape[0]):
@@ -218,5 +223,14 @@ class Robot:
                 p_a = p_b
 
 
-class RobotPuma560:
-    pass
+class RobotPuma560(Robot):
+
+    def __init__(self):
+        self.dh_array = np.array([[0.00,   6.60,   -90,   0.0],
+                                  [4.32,   1.49,   0.0,   0.0],
+                                  [0.20,   0.00,   -90,   0.0],
+                                  [0.00,   4.32,   -90,   0.0],
+                                  [0.00,   0.00,   90,    0.0],
+                                  [0.00,   0.56,   0.0,   0.0]])
+
+    
