@@ -225,6 +225,13 @@ class Robot:
 
 
 class RobotPuma560(Robot):
+    """Robot object for Puma 560
+
+      Args:
+        - Robot ([type]): [description]
+    """
+    #TODO: Workspace restriction:
+    #TODO: Joint angle limits
 
     def __init__(self):
         self.dh_array = np.array([[0.00,   6.60,   -90,   0.0],
@@ -304,9 +311,34 @@ class RobotPuma560(Robot):
         if elbow == 'down':
             theta2 = phi2 + alpha2
         
-        # Compute theta2
+        # Compute theta3
         beta3 = np.arccos((A2**2 + hyp2**2 - hyp1**2)/(2*A2*hyp2))
         ALPHA3 = np.arccos(A3/hyp2)
         theta3 = np.pi - beta3 - ALPHA3
 
-        return np.degrees([theta1, theta2, theta3])
+        # Compute theta4
+        T03 = forward_kinematics(self.dh_array[:3,:])
+        R36 = np.matmul( np.transpose(T03[:3,:3]), trans_matrix_tip[:3,:3])
+        if R36[1,2]==0 and R36[1,3]==0:
+            theta4 = 0
+        else:
+            theta4 = np.arctan2(R36[1,2], R36[0,2])
+        # if NF:
+        #     t4 = t4 + pi
+        
+        # Compute theta5 and theta6
+        theta5 = np.arctan2(R36[0,2]*np.cos(theta4)+R36[1,2]*np.sin(theta4),
+                            R36[2,2] )
+        theta6 = np.arctan2(-R36[0,0]*np.sin(theta4)+R36[1,0]*np.cos(theta4),  
+                            -R36[0,1]*np.sin(theta4) + R36[1,1]*np.cos(theta4))
+        
+        if theta5 == 0:
+            theta4 = np.arctan2(R36[1,0],R36[0,0])
+            theta6 = 0
+
+        if theta5 == np.pi:
+            t4 = np.arctan2(-R36[2,1],-R36[1,1])
+            theta6 =0
+        
+        # print('t4, t5', theta4, theta5)
+        return np.degrees([theta1, theta2, theta3, theta4, theta5, theta6])
