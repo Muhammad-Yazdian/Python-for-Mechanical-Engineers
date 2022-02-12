@@ -16,6 +16,7 @@
 # By Seied Muhammad Yazdian | Feb 1s, 2022
 
 import numpy as np
+from numpy.linalg import inv
 from numpy import genfromtxt
 import mathlib_path
 import mathlib as ml
@@ -234,6 +235,11 @@ class RobotPuma560(Robot):
                                   [0.00,   0.56,   0.0,   0.0]])
 
     def draw_puma(self, ax):
+        """Draws the light version 3D plot of Puma 560
+
+          Args:
+            - ax (matplotlib axis): plot axis
+          """
         i = 0
         p_a = self.transformation_matrix_all[i, 0:3, 3]
         for i in range(self.transformation_matrix_all.shape[0]):
@@ -243,17 +249,64 @@ class RobotPuma560(Robot):
                 if i != 2:
                     gl.draw3D(ax, 'arrow', p_b-p_a, position=p_a, color='k')
                 else:
-                    dh = self.dh_array
-                    # It is always a positive constant (for Puma)
-                    D2 = dh[1, 1]
-                    # It is always a positive constant (for Puma)
-                    A2 = dh[1, 0]
-                    l1 = np.matmul(
-                        self.transformation_matrix_all[i-1, :3, :3], [0, 0, D2])
-                    l2 = np.matmul(
-                        self.transformation_matrix_all[i, :3, :3], [A2, 0, 0])
+                    l1 = np.matmul(self.transformation_matrix_all[i-1, :3, :3], 
+                                   [0, 0, self.dh_array[1, 1]])
+                    l2 = np.matmul(self.transformation_matrix_all[i, :3, :3],
+                                   [self.dh_array[1, 0], 0, 0])
                     gl.draw3D(ax, 'arrow', l1, position=p_a, color='r')
                     gl.draw3D(ax, 'arrow', l2, position=p_a + l1, color='r')
                 p_a = p_b
         gl.draw3D(ax, 'trans', self.transformation_matrix_all[0])
         gl.draw3D(ax, 'trans', self.transformation_matrix_all[-1])
+
+
+    def inverse_kinematics(self, trans_matrix_tip, hand='left', elbow='up', flip='no'):
+        """Inverse kinematics of Puma robot
+
+          Args:
+            - trans_matrix_tip (ndarray): Transformation matrix of endeffector
+            - hand (str, optional): Handedness. Defaults to 'left'.
+            - elbow (str, optional): Elbow configuration. Defaults to 'up'.
+            - flip (str, optional): Flip configuration. Defaults to 'no'.
+
+          Returns:
+            ndarray: Joint angles :math:`\theta_1, \theta_2, and theta_3`
+          """
+        dh = self.dh_array
+        D1 = dh[0, 1] # It is always a positive constant (for Puma)
+        D2 = dh[1, 1] # It is always a positive constant (for Puma)
+        D4 = dh[3, 1] # It is always a positive constant (for Puma)
+        A2 = dh[1, 0] # It is always a positive constant (for Puma)
+        A3 = dh[2, 0] # It is always a positive constant (for Puma)
+        D6 = dh[5, 1] # It is always a positive constant (for Puma)
+        
+        T56 = np.identity(4)
+        # T56[:3,:3] = rotation_matrix_x(180)
+        T56[2, 3] = D6
+        T = np.matmul(trans_matrix_tip, inv(T56))
+        x, y, z = T[:3, 3]
+
+        # Compute theta1
+        hyp0 = np.hypot(x, y)
+        alpha1 = np.arcsin(D2/hyp0)
+        phi1 = np.arctan2(y, x)
+        theta1 = phi1 - alpha1
+        if hand == 'right':
+            theta1 = phi1 + alpha1 + np.pi
+        
+        # Compute theta2
+        h1 = -(z - D1)
+        phi2 = np.arctan2(h1, hyp0*np.cos(alpha1))
+        hyp1 = np.hypot(h1, hyp0*np.cos(alpha1))
+        hyp2 = np.hypot(A3, D4)
+        alpha2 = np.arccos((A2**2 + hyp1**2 - hyp2**2)/(2*A2*hyp1))
+        theta2 = phi2 - alpha2
+        if elbow == 'down':
+            theta2 = phi2 + alpha2
+        
+        # Compute theta2
+        beta3 = np.arccos((A2**2 + hyp2**2 - hyp1**2)/(2*A2*hyp2))
+        ALPHA3 = np.arccos(A3/hyp2)
+        theta3 = np.pi - beta3 - ALPHA3
+
+        return np.degrees([theta1, theta2, theta3])
