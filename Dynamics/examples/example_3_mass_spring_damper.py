@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
 
-def massSpringDamperModel(q, t, m, k, b):
+def mass_spring_damper_model(q, t, m, k, b):
     """Mathematical model of an ideal mass-spring-damper system
 
       Args:
@@ -41,8 +41,8 @@ q_0 = [1, 0]  # initial condition [(m), (m/s)]
 
 # Simulation using ODE solver
 t = np.linspace(0, 15, 300)
-q_a = odeint(massSpringDamperModel, q_0, t, args=(m, k, b))
-q_b = odeint(massSpringDamperModel, q_0, t, args=(m, k, 0))
+q_a = odeint(mass_spring_damper_model, q_0, t, args=(m, k, b))
+q_b = odeint(mass_spring_damper_model, q_0, t, args=(m, k, 0))
 
 # Display contents
 matplotlib.rcParams['text.usetex'] = True
