@@ -16,6 +16,7 @@
 # By Seied Muhammad Yazdian | Feb 1s, 2022
 
 import numpy as np
+from numpy.linalg import inv
 from numpy import genfromtxt
 import mathlib_path
 import mathlib as ml
@@ -189,10 +190,12 @@ class Robot:
         - DH_parameters (numpy.ndarray): Whole DH table
       """
 
-    def __init__(self, dh_param_file):
-        self.dh_array = genfromtxt(dh_param_file, delimiter=',')[:,1:5]
-        self.transformation_matrix_all = forward_kinematics_all_joints(
-            self.dh_array)
+    def __init__(self, dh_param_file=None):
+        self.dh_array = 0
+        if dh_param_file:
+            self.dh_array = genfromtxt(dh_param_file, delimiter=',')[:,1:5]
+            self.transformation_matrix_all = forward_kinematics_all_joints(
+                self.dh_array)
     
 
     def angles(self, theta):
@@ -206,8 +209,11 @@ class Robot:
             self.dh_array)
 
       
+    def set_dh(self):
+        self.dh_array = 1
+
+    
     def draw(self, ax):
-        # transformation_matrix_all = fkAllJoints(self.dh_array)
         i = 0
         p_a = self.transformation_matrix_all[i, 0:3, 3]
         for i in range(self.transformation_matrix_all.shape[0]):
@@ -218,5 +224,121 @@ class Robot:
                 p_a = p_b
 
 
-class RobotPuma560:
-    pass
+class RobotPuma560(Robot):
+    """Robot object for Puma 560
+
+      Args:
+        - Robot ([type]): [description]
+    """
+    #TODO: Workspace restriction:
+    #TODO: Joint angle limits
+
+    def __init__(self):
+        self.dh_array = np.array([[0.00,   6.60,   -90,   0.0],
+                                  [4.32,   1.49,   0.0,   0.0],
+                                  [0.20,   0.00,   -90,   0.0],
+                                  [0.00,   4.32,   -90,   0.0],
+                                  [0.00,   0.00,   90,    0.0],
+                                  [0.00,   0.56,   0.0,   0.0]])
+
+    def draw_puma(self, ax):
+        """Draws the light version 3D plot of Puma 560
+
+          Args:
+            - ax (matplotlib axis): plot axis
+          """
+        i = 0
+        p_a = self.transformation_matrix_all[i, 0:3, 3]
+        for i in range(self.transformation_matrix_all.shape[0]):
+            # gl.draw3D(ax, 'trans', self.transformation_matrix_all[i])
+            if i > 0:
+                p_b = self.transformation_matrix_all[i, 0:3, 3]
+                if i != 2:
+                    gl.draw3D(ax, 'arrow', p_b-p_a, position=p_a, color='k')
+                else:
+                    l1 = np.matmul(self.transformation_matrix_all[i-1, :3, :3], 
+                                   [0, 0, self.dh_array[1, 1]])
+                    l2 = np.matmul(self.transformation_matrix_all[i, :3, :3],
+                                   [self.dh_array[1, 0], 0, 0])
+                    gl.draw3D(ax, 'arrow', l1, position=p_a, color='r')
+                    gl.draw3D(ax, 'arrow', l2, position=p_a + l1, color='r')
+                p_a = p_b
+        gl.draw3D(ax, 'trans', self.transformation_matrix_all[0])
+        gl.draw3D(ax, 'trans', self.transformation_matrix_all[-1])
+
+
+    def inverse_kinematics(self, trans_matrix_tip, hand='left', elbow='up', flip='no'):
+        """Inverse kinematics of Puma robot
+
+          Args:
+            - trans_matrix_tip (ndarray): Transformation matrix of endeffector
+            - hand (str, optional): Handedness. Defaults to 'left'.
+            - elbow (str, optional): Elbow configuration. Defaults to 'up'.
+            - flip (str, optional): Flip configuration. Defaults to 'no'.
+
+          Returns:
+            ndarray: Joint angles :math:`\theta_1, \theta_2, and theta_3`
+          """
+        dh = self.dh_array
+        D1 = dh[0, 1] # It is always a positive constant (for Puma)
+        D2 = dh[1, 1] # It is always a positive constant (for Puma)
+        D4 = dh[3, 1] # It is always a positive constant (for Puma)
+        A2 = dh[1, 0] # It is always a positive constant (for Puma)
+        A3 = dh[2, 0] # It is always a positive constant (for Puma)
+        D6 = dh[5, 1] # It is always a positive constant (for Puma)
+        
+        T56 = np.identity(4)
+        # T56[:3,:3] = rotation_matrix_x(180)
+        T56[2, 3] = D6
+        T = np.matmul(trans_matrix_tip, inv(T56))
+        x, y, z = T[:3, 3]
+
+        # Compute theta1
+        hyp0 = np.hypot(x, y)
+        alpha1 = np.arcsin(D2/hyp0)
+        phi1 = np.arctan2(y, x)
+        theta1 = phi1 - alpha1
+        if hand == 'right':
+            theta1 = phi1 + alpha1 + np.pi
+        
+        # Compute theta2
+        h1 = -(z - D1)
+        phi2 = np.arctan2(h1, hyp0*np.cos(alpha1))
+        hyp1 = np.hypot(h1, hyp0*np.cos(alpha1))
+        hyp2 = np.hypot(A3, D4)
+        alpha2 = np.arccos((A2**2 + hyp1**2 - hyp2**2)/(2*A2*hyp1))
+        theta2 = phi2 - alpha2
+        if elbow == 'down':
+            theta2 = phi2 + alpha2
+        
+        # Compute theta3
+        beta3 = np.arccos((A2**2 + hyp2**2 - hyp1**2)/(2*A2*hyp2))
+        ALPHA3 = np.arccos(A3/hyp2)
+        theta3 = np.pi - beta3 - ALPHA3
+
+        # Compute theta4
+        T03 = forward_kinematics(self.dh_array[:3,:])
+        R36 = np.matmul( np.transpose(T03[:3,:3]), trans_matrix_tip[:3,:3])
+        if R36[1,2]==0 and R36[1,3]==0:
+            theta4 = 0
+        else:
+            theta4 = np.arctan2(R36[1,2], R36[0,2])
+        # if NF:
+        #     t4 = t4 + pi
+        
+        # Compute theta5 and theta6
+        theta5 = np.arctan2(R36[0,2]*np.cos(theta4)+R36[1,2]*np.sin(theta4),
+                            R36[2,2] )
+        theta6 = np.arctan2(-R36[0,0]*np.sin(theta4)+R36[1,0]*np.cos(theta4),  
+                            -R36[0,1]*np.sin(theta4) + R36[1,1]*np.cos(theta4))
+        
+        if theta5 == 0:
+            theta4 = np.arctan2(R36[1,0],R36[0,0])
+            theta6 = 0
+
+        if theta5 == np.pi:
+            t4 = np.arctan2(-R36[2,1],-R36[1,1])
+            theta6 =0
+        
+        # print('t4, t5', theta4, theta5)
+        return np.degrees([theta1, theta2, theta3, theta4, theta5, theta6])
