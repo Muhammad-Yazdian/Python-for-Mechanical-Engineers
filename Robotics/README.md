@@ -8,4 +8,4 @@ A collection of useful modules and examples for solving robotic problems
 - `roboticlib`: A basic Pyhton module for creating and simulating robots
 
 ## For Contributors
-[Contribution Guideline](https://github.com/Muhammad-Yazdian/Python-for-Mechanical-Engineers#contribution-guideline)
+Please see the [Contribution Guideline](https://github.com/Muhammad-Yazdian/Python-for-Mechanical-Engineers#contribution-guideline) in the project main page.
