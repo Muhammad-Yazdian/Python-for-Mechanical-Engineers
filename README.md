@@ -1,6 +1,8 @@
 # Python for Mechanical Engineers
 A collection of Python open-source modules and examples for solving different mechanical problems (e.g., [Dynamics](Dynamics), Control, [Robotics](Robotics), Haptics, FEM, and Statics).
 
+**Note:** *For reviewing the most basic Python Commands, see [these tutorials in Jupyter Notebook](python_tutorial).*
+
 ![alt text](/Robotics/res/img/rrr_robot.gif)
 
 An articulating manipulator generated using `roboticlib` module 
