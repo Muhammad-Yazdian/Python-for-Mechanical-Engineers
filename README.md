@@ -1,28 +1,28 @@
 # Python for Mechanical Engineers
-A collection of useful libraries for solving mechanical problems in different
-subjects:
-- FEM
-- Statics
-- [Dynamics](Dynamics)
-- Control
-- [Robotics](Robotics)
-- Haptics
+A collection of Python open-source modules and examples for solving different mechanical problems (e.g., [Dynamics](Dynamics), Control, [Robotics](Robotics), Haptics, FEM, and Statics).
 
 ![alt text](/Robotics/res/img/rrr_robot.gif)
 
+An articulating manipulator generated using `roboticlib` module 
+
 ## Features
-- Many simple examples to get you started
-- `mathlib`: A basic Pyhton library for solving most common mathematical
-problems in Mechanical Engineering field
-- `Utilities`: A high-quality visualization library for creating 2D and 3D
-graphical plots
+- Simple and step-by-step examples to get you started quickly.
+- `mathlib`: A basic Pyhton module for solving most common mathematical problems in Mechanical Engineering field
+- `Utilities`: A high-quality visualization module for creating 2D and 3D graphical plots
 
-## For Contributors
-- How to contribute?
-- Coding style
-- Documentation format
+## Contribution Guideline
+Please follow below steps if you are interested in contributing to this project:
+1. **Fork** this repository
+2. Check the issue section (create a new issue if the bug you found is not already listed there)
+3. Solve the issue or add a new feature
+4. Send a **Pull Request** (include enough information about the issue and how you solved it)
+### Coding style
+- TBD
+### Documentation format
+- TBD
 
-## Versions
+## Used Packages/Libraries
+This project uses different packages/libraries. The packages and their versions are listed below:
 - Python: 3.7.3
     ```python
     import sys; print(sys.version)
@@ -51,4 +51,3 @@ graphical plots
     ```python
     import scipy; print (scipy.__version__)
     ```
-
