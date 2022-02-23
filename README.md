@@ -10,10 +10,6 @@ An articulating manipulator generated using `roboticlib` module
 - `mathlib`: A basic Pyhton module for solving most common mathematical problems in Mechanical Engineering field
 - `Utilities`: A high-quality visualization module for creating 2D and 3D graphical plots
 
-## For Contributors
-- How to contribute?
-
-
 ## Contribution Guideline
 Please follow below steps if you are interested in contributing to this project:
 1. **Fork** this repository
@@ -25,8 +21,7 @@ Please follow below steps if you are interested in contributing to this project:
 ### Documentation format
 - TBD
 
-
-## Versions
+## Used Packages/Libraries
 This project uses different packages/libraries. The packages and their versions are listed below:
 - Python: 3.7.3
     ```python
