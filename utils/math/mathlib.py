@@ -183,3 +183,38 @@ def rotation_matrix_axis_angle(axis, theta):
     return np.array([[x*x*a+c,   x*y*a-z*s, x*z*a+y*s],
                      [y*x*a+z*s, y*y*a+c,   y*z*a-x*s],
                      [z*x*a-y*s, z*y*a+x*s, z*z*a+c]])
+
+
+def find_axis_by_two_vectors_and_angles(vector_1, angle_1, vector_2, angle_2):    
+    """Finds a 3D unit vector that makes angles angle_1 and angle_2 with
+      vector_1 and vector_2 respectively.
+      
+      Note:
+        This is the same as finding the intersection of cones with same vertcies
+
+      Args:
+        - vector_1 (ndarray): A 3D vector
+        - angle_1 (float): The angle between vector_1 and to-be-found axis
+        - vector_2 (ndarray): A 3D vector
+        - angle_2 (float): The angle between vector_2 and to-be-found axis
+
+      Returns:
+        ndarray: Unit vector
+    """
+    #TODO: There are two sets of solutions. Include the second one as well
+    e, f, g = vector_1
+    p, q, r = vector_2
+    a, b = np.cos(angle_1), np.cos(angle_2)
+    A=np.sqrt(-a**2*p**2-a**2*q**2-a**2*r**2+2*a*b*e*p+2*a*b*f*q+2*a*b*g*r-b**2*e**2-b**2*f**2-b**2*g**2+e**2*q**2+e**2*r**2-2*e*f*p*q-2*e*g*p*r+f**2*p**2+f**2*r**2-2*f*g*q*r+g**2*p**2+g**2*q**2)
+    N=a*e*q**2+a*e*r**2-a*f*p*q-a*g*p*r-b*e*f*q-b*e*g*r+b*f**2*p+b*g**2*p+A*(g*q-f*r)
+    D=e**2*q**2+e**2*r**2-2*e*f*p*q-2*e*g*p*r+f**2*p**2+f**2*r**2-2*f*g*q*r+g**2*p**2+g**2*q**2
+    x=N/D
+    N=-a*e*p*q+a*f*p**2+a*f*r**2-a*g*q*r+b*e**2*q-b*e*f*p-b*f*g*r+b*g**2*q+e*r*A-g*p*A
+    D=e**2*q**2+e**2*r**2-2*e*f*p*q-2*e*g*p*r+f**2*p**2+f**2*r**2-2*f*g*q*r+g**2*p**2+g**2*q**2
+    y=N/D
+    N=(-e*q+f*p)*A
+    D=e**2*q**2+e**2*r**2-2*e*f*p*q-2*e*g*p*r+f**2*p**2+f**2*r**2-2*f*g*q*r+g**2*p**2+g**2*q**2
+    N2=-a*e*p*r-a*f*q*r+a*g*p**2+a*g*q**2+b*e**2*r-b*e*g*p+b*f**2*r-b*f*g*q
+    D2=e**2*q**2+e**2*r**2-2*e*f*p*q-2*e*g*p*r+f**2*p**2+f**2*r**2-2*f*g*q*r+g**2*p**2+g**2*q**2
+    z=N/D+N2/D2
+    return np.array([x,y,z])
