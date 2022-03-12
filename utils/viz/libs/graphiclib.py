@@ -10,14 +10,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d, Axes3D
+import mathlib_path
+import mathlib as ml
 
-def drawArrow(ax, vector, position, *args, **kwargs):
-    """Draw a 2D arrow on xy plane
+def draw_arrow_2d(ax, vector, position, *args, **kwargs):
+    """Draws a 2D arrow on xy plane
     
       Args:
         - ax (matplotlib.axes): an axes to draw the item on
-        - position (numpy.ndarray): Start position (2x1, 3x1, or nx1)
-        - vector (numpy.ndarray): Vector (2x1, 3x1, or nx1)"""
+        - position (numpy.ndarray): Start position (x,y). It ignores indices > 1.
+        - vector (numpy.ndarray): Vector (dx, dy). It ignores indices > 1."""
     color = kwargs.get('color')
     if color is None:
         color = 'k'
@@ -31,8 +33,8 @@ def drawArrow(ax, vector, position, *args, **kwargs):
               vector[0], vector[1],
               scale=1, scale_units='xy', angles='xy', color=color)
 
-def drawFrame(ax, frame, position, *args, **kwargs):
-    """Draw a 2D frame on xy plane
+def draw_frame_2d(ax, frame, position, *args, **kwargs):
+    """Draws a 2D frame on xy plane
     
       Args:
         - ax (matplotlib.axes): an axes to draw the item on
@@ -80,8 +82,8 @@ class Arrow3D(FancyArrowPatch):
         return np.min(zs)
 
 
-def setAxesEqual3D(ax):
-    """Make axes of 3D plot have equal scale so that spheres appear as spheres,
+def set_axes_equal_3d(ax):
+    """Makes axes of 3D plot have equal scale so that spheres appear as spheres,
       cubes as cubes, etc..  This is one possible solution to Matplotlib's
       ax.set_aspect('equal') and ax.axis('equal') not working for 3D.
 
@@ -109,10 +111,11 @@ def setAxesEqual3D(ax):
 
     ax.set_xlim3d([x_middle - plot_radius, x_middle + plot_radius])
     ax.set_ylim3d([y_middle - plot_radius, y_middle + plot_radius])
-    ax.set_zlim3d([z_middle - plot_radius, z_middle + plot_radius])
+    ax.set_zlim3d([z_middle - 0.75*plot_radius, z_middle + 0.75*plot_radius]) 
+    #NOTE: It seems z needs a gain of 0.75 to create a perfect square plot
 
 
-def draw3D(ax, item_cat, item, *args, **kwargs):
+def draw_generic_3d(ax, item_cat, item, *args, **kwargs):
     """Displays a generic object
 
       Args:
@@ -130,21 +133,21 @@ def draw3D(ax, item_cat, item, *args, **kwargs):
     show_axis = kwargs.get('show_axis')
 
     if item_cat == "point": 
-        drawPoint3D(ax, item, color)
+        draw_point_3d(ax, item, color)
     elif item_cat == "arrow":
-        drawArrow3D(ax, item, position, color)
+        draw_arrow_3d(ax, item, position, color)
     elif item_cat == "frame":
-        drawFrame3D(ax, item, position, show_axis=show_axis)
+        draw_frame_3d(ax, item, position, show_axis=show_axis)
     elif item_cat == "trans":
-        drawTransformationMatrix3D(ax, item)
+        draw_trans_matrix_3d(ax, item)
 
 
-def drawPoint3D(ax, vector, color):
+def draw_point_3d(ax, vector, color):
     """Displays a 3D point indicated by a vector relative to origin of ax"""
     ax.plot(vector[0], vector[1], vector[2], 'o', color=color)
 
 
-def drawArrow3D(ax, vector, position, color):
+def draw_arrow_3d(ax, vector, position, color):
     """Displays a 3D vector at a given position"""
     a = position
     b = position + vector
@@ -157,7 +160,20 @@ def drawArrow3D(ax, vector, position, color):
     ax.add_artist(arrow)
 
 
-def drawFrame3D(ax, frame, position, *args, **kwargs):
+def draw_arrow_between_3d(ax, start_point, end_point, color):
+    """Displays a 3D vector between two points"""
+    a = start_point
+    b = end_point
+    # A standard line plot behind the Arrow3D.
+    # It is required to pass as ax when using set_axes_equal(ax)
+    # Add the arrow with a triangle at the tip
+    ax.plot((a[0], b[0]), (a[1], b[1]), (a[2], b[2]), color=color)
+    arrow = Arrow3D((a[0], b[0]), (a[1], b[1]), (a[2], b[2]), mutation_scale=15,
+                lw=1, arrowstyle="-|>", color=color)
+    ax.add_artist(arrow)
+
+
+def draw_frame_3d(ax, frame, position, *args, **kwargs):
     """Displays a 3D frame (i.e., rotation matrix) at a given position
       The frame is right-handed and color-coded:
     
@@ -168,14 +184,30 @@ def drawFrame3D(ax, frame, position, *args, **kwargs):
     if show_axis is None:
         show_axis = np.array([1,1,1])
     if show_axis[0]:
-        drawArrow3D(ax, frame[:,0], position, 'r')
+        draw_arrow_3d(ax, frame[:,0], position, 'r')
     if show_axis[1]:
-        drawArrow3D(ax, frame[:,1], position, 'g')
+        draw_arrow_3d(ax, frame[:,1], position, 'g')
     if show_axis[2]:
-        drawArrow3D(ax, frame[:,2], position, 'b')
+        draw_arrow_3d(ax, frame[:,2], position, 'b')
 
 
-def drawTransformationMatrix3D(ax, transformation_matrix):
-    """Draw a 4x4 transformation matrix using its orientation (R) and position (p)"""
-    drawFrame3D(
+def draw_trans_matrix_3d(ax, transformation_matrix):
+    """Draws a 4x4 transformation matrix using its orientation (R) and position (p)"""
+    draw_frame_3d(
         ax, transformation_matrix[0:3, 0:3], transformation_matrix[0:3, 3])
+
+
+def draw_circle_3d(ax, center, normal, radius, color):
+    """Draws a planar circle in 3D space
+
+      Args:
+        - ax (matplotlib axis): aixs that the circle will be drawn on
+        - center (ndarray): The locaton of ciecle center [x, y, z]
+        - normal (ndarray): The vector normal to the circle plan
+        - radius (float): Circle radius
+        - color (str): Circle color"""
+    theta = np.linspace(0, 2 * np.pi, 50)
+    p_xy = radius * np.array([np.cos(theta), np.sin(theta), 0*theta]).T
+    Rot = ml.rotation_matrix_z_align_to(normal)
+    p_mapped = center + np.dot(p_xy, Rot.T)
+    ax.plot3D(p_mapped[:,0], p_mapped[:,1], p_mapped[:,2], color)
