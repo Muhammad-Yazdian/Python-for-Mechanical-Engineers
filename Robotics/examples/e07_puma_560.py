@@ -83,7 +83,7 @@ for step in range(num_steps):
     theta = theta_final * step/num_steps
     ax.set(xlim=(-0, 20), ylim=(0, 20), zlim=(0, 20))
     # ax.grid(True)
-    robot.angles(theta)
+    robot.set_angles(theta)
     plt.cla()
     ax.plot([0, 0], [-3, 3], 'gray')
     ax.plot([-3, 3], [0, 0], 'gray')
@@ -92,7 +92,7 @@ for step in range(num_steps):
     plt.pause(0.03)
 plt.show()
 
-robot.angles(theta_final)
+robot.set_angles(theta_final)
 endeffector_frame = robot.transformation_matrix_all[6]
 
 # result = puma_560_ik(robot, 
