@@ -139,7 +139,7 @@ def draw_generic_3d(ax, item_cat, item, *args, **kwargs):
     elif item_cat == "frame":
         draw_frame_3d(ax, item, position, show_axis=show_axis)
     elif item_cat == "trans":
-        draw_trans_matrix_3d(ax, item)
+        draw_trans_matrix_3d(ax, item, show_axis=show_axis)
 
 
 def draw_point_3d(ax, vector, color):

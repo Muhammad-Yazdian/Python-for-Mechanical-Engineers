@@ -212,14 +212,17 @@ class Robot:
             self.dh_array)
 
     
-    def draw(self, ax):
+    def draw(self, ax, *args, **kwargs):
+        show_axis = kwargs.get('show_axis')
         i = 0
         p_a = self.transformation_matrix_all[i, 0:3, 3]
         for i in range(self.transformation_matrix_all.shape[0]):
-            gl.draw_generic_3d(ax, 'trans', self.transformation_matrix_all[i])
+            gl.draw_generic_3d(ax, 'trans', self.transformation_matrix_all[i],
+                show_axis=show_axis)
             if i > 0:
                 p_b = self.transformation_matrix_all[i, 0:3, 3]
-                gl.draw_generic_3d(ax, 'arrow', p_b-p_a, position=p_a, color='k')
+                gl.draw_generic_3d(ax, 'arrow', p_b-p_a, position=p_a,
+                    color='k')
                 p_a = p_b
 
 
