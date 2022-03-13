@@ -30,7 +30,7 @@ for step in range(num_steps):
     theta = theta_final * step/num_steps
     ax.set(xlim=(-0, 20), ylim=(0, 20), zlim=(0, 20))
     # ax.grid(True)
-    robot.angles(theta)
+    robot.set_angles(theta)
     plt.cla()
     robot.draw(ax)
     gl.set_axes_equal_3d(ax)
