@@ -159,10 +159,10 @@ def rotation_matrix_xyz(theta_x, theta_y, theta_z):
     sg = np.sin(np.radians(theta_x))
 
     Rxyz = np.array([[ca*cb, ca*sb*sg-sa*cg, ca*sb*cg+sa*sg],
-                    [sa*cb, sa*sb*sg+ca*cg, sa*sb*cg-ca*sg],
-                    [-sb, cb*sg, cb*cg]])
+                     [sa*cb, sa*sb*sg+ca*cg, sa*sb*cg-ca*sg],
+                     [-sb, cb*sg, cb*cg]])
         
-    return R_xyz
+    return Rxyz
 
 
 def rotation_matrix_axis_angle(axis, theta):
