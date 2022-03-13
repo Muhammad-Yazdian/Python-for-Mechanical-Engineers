@@ -125,10 +125,8 @@ def rotation_matrix_xy(theta_x, theta_y):
         .. math::
 
         R_xy = R_y R_x """
-    ca = np.cos(np.radians(theta_z))
     cb = np.cos(np.radians(theta_y))
     cg = np.cos(np.radians(theta_x))
-    sa = np.sin(np.radians(theta_z))
     sb = np.sin(np.radians(theta_y))
     sg = np.sin(np.radians(theta_x))
 
@@ -160,9 +158,9 @@ def rotation_matrix_xyz(theta_x, theta_y, theta_z):
     sb = np.sin(np.radians(theta_y))
     sg = np.sin(np.radians(theta_x))
 
-    Rzyx = np.array([[ca*cb, ca*sb*sg-sa*cg, ca*sb*cg+sa*sg],
-                     [sa*cb, sa*sb*sg+ca*cg, sa*sb*cg-ca*sg],
-                     [-sb, cb*sg, cb*cg]])
+    Rxyz = np.array([[ca*cb, ca*sb*sg-sa*cg, ca*sb*cg+sa*sg],
+                    [sa*cb, sa*sb*sg+ca*cg, sa*sb*cg-ca*sg],
+                    [-sb, cb*sg, cb*cg]])
         
     return R_xyz
 
