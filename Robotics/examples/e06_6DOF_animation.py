@@ -33,6 +33,6 @@ for step in range(num_steps):
     robot.angles(theta)
     plt.cla()
     robot.draw(ax)
-    gl.setAxesEqual3D(ax)
+    gl.set_axes_equal_3d(ax)
     plt.pause(0.03)
 plt.show()

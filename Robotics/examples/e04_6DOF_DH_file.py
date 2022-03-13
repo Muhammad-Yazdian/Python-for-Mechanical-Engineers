@@ -26,10 +26,10 @@ def drawRobot():
     i = 0
     p_a = transformation_matrix_all[i, 0:3, 3]
     for i in range(transformation_matrix_all.shape[0]):
-        gl.draw3D(ax, 'trans', transformation_matrix_all[i])
+        gl.draw_generic_3d(ax, 'trans', transformation_matrix_all[i])
         if i > 0:
             p_b = transformation_matrix_all[i, 0:3, 3]
-            gl.draw3D(ax, 'arrow', p_b-p_a, position=p_a, color='k')
+            gl.draw_generic_3d(ax, 'arrow', p_b-p_a, position=p_a, color='k')
             p_a = p_b
 
 
@@ -43,6 +43,6 @@ transformation_matrix_all = rl.forward_kinematics_all_joints(DH_table)
 fig = plt.figure()
 ax = plt.axes(projection='3d')
 drawRobot()
-gl.draw3D(ax, 'point', endeffector_position, color='c')  # Optional
-gl.setAxesEqual3D(ax)
+gl.draw_generic_3d(ax, 'point', endeffector_position, color='c')  # Optional
+gl.set_axes_equal_3d(ax)
 plt.show()

@@ -88,7 +88,7 @@ for step in range(num_steps):
     ax.plot([0, 0], [-3, 3], 'gray')
     ax.plot([-3, 3], [0, 0], 'gray')
     robot.draw(ax)
-    gl.setAxesEqual3D(ax)
+    gl.set_axes_equal_3d(ax)
     plt.pause(0.03)
 plt.show()
 

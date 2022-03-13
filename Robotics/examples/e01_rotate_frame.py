@@ -29,7 +29,7 @@ import graphiclib as gl
 
 fig = plt.figure()
 ax = plt.axes(projection='3d')
-gl.draw3D(ax, 'frame', rot_mat_1, position=np.array([0,0,0]))
-gl.draw3D(ax, 'frame', rot_mat_2, position=np.array([0,0,0]))
-gl.setAxesEqual3D(ax)
+gl.draw_generic_3d(ax, 'frame', rot_mat_1, position=np.array([0,0,0]))
+gl.draw_generic_3d(ax, 'frame', rot_mat_2, position=np.array([0,0,0]))
+gl.set_axes_equal_3d(ax)
 plt.show()
