@@ -2,7 +2,7 @@
     
     For more advanced plots one can use PyQtGraph
         - https://www.pyqtgraph.org/
-  """
+    """
 # By Seied Muhammad Yazdian | Feb 1s, 2022
 # TODO: Add PyQTGraph https://www.pyqtgraph.org/
 # TODO: Add unit tests
@@ -16,10 +16,10 @@ import mathlib as ml
 def draw_arrow_2d(ax, vector, position, *args, **kwargs):
     """Draws a 2D arrow on xy plane
     
-      Args:
-        - ax (matplotlib.axes): an axes to draw the item on
-        - position (numpy.ndarray): Start position (x,y). It ignores indices > 1.
-        - vector (numpy.ndarray): Vector (dx, dy). It ignores indices > 1."""
+        Args:
+            - ax (matplotlib.axes): an axes to draw the item on
+            - position (numpy.ndarray): Start position (x,y). It ignores indices > 1.
+            - vector (numpy.ndarray): Vector (dx, dy). It ignores indices > 1."""
     color = kwargs.get('color')
     if color is None:
         color = 'k'
@@ -191,10 +191,23 @@ def draw_frame_3d(ax, frame, position, *args, **kwargs):
         draw_arrow_3d(ax, frame[:,2], position, 'b')
 
 
-def draw_trans_matrix_3d(ax, transformation_matrix):
-    """Draws a 4x4 transformation matrix using its orientation (R) and position (p)"""
+def draw_trans_matrix_3d(ax, transformation_matrix, *args, **kwargs):
+    """Draws a 4x4 transformation matrix using its orientation (R) and position (p)
+
+      Args:
+        - ax (axis): A matplotlib plot axis
+        - transformation_matrix (ndarray): 4x4 transformation matrix
+      Note:
+        The frame is right-handed and color-coded:
+        - Red axis: :math:`\hat{x}`
+        - Green axis: :math:`\hat{y}`
+        - Blue axis: :math:`\hat{z}`"""
+    show_axis = kwargs.get('show_axis')
     draw_frame_3d(
-        ax, transformation_matrix[0:3, 0:3], transformation_matrix[0:3, 3])
+        ax, 
+        transformation_matrix[0:3, 0:3], 
+        transformation_matrix[0:3, 3], 
+        show_axis=show_axis)
 
 
 def draw_circle_3d(ax, center, normal, radius, color):
