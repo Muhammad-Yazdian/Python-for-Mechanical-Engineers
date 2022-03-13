@@ -1,4 +1,4 @@
-#===============================================================================
+# ===============================================================================
 # e07_puma_560.py
 #
 # This script simulates Puma 560 FK and IK
@@ -14,7 +14,7 @@
 #
 # Last update:
 #   Feb 10, 2022
-#===============================================================================
+# ===============================================================================
 
 import numpy as np
 from numpy.linalg import inv
@@ -27,7 +27,10 @@ import graphiclib as gl
 import os
 import time
 
+show_plots = True
+
 theta_final = np.array([15, 15, 10, 0, 0, 0])
+
 
 def puma_560_fk():
     pass
@@ -35,13 +38,13 @@ def puma_560_fk():
 
 def puma_560_ik(robot, T_tip, hand='left', elbow='up', flip='no'):
     dh = robot.dh_array
-    D1 = dh[0, 1] # It is always a positive constant (for Puma)
-    D2 = dh[1, 1] # It is always a positive constant (for Puma)
-    D4 = dh[3, 1] # It is always a positive constant (for Puma)
-    A2 = dh[1, 0] # It is always a positive constant (for Puma)
-    A3 = dh[2, 0] # It is always a positive constant (for Puma)
-    D6 = dh[5, 1] # It is always a positive constant (for Puma)
-    
+    D1 = dh[0, 1]  # It is always a positive constant (for Puma)
+    D2 = dh[1, 1]  # It is always a positive constant (for Puma)
+    D4 = dh[3, 1]  # It is always a positive constant (for Puma)
+    A2 = dh[1, 0]  # It is always a positive constant (for Puma)
+    A3 = dh[2, 0]  # It is always a positive constant (for Puma)
+    D6 = dh[5, 1]  # It is always a positive constant (for Puma)
+
     T56 = np.identity(4)
     T56[2, 3] = D6
     T = np.matmul(T_tip, inv(T56))
@@ -54,7 +57,7 @@ def puma_560_ik(robot, T_tip, hand='left', elbow='up', flip='no'):
     theta1 = phi1 - alpha1
     if hand == 'right':
         theta1 = phi1 + alpha1 + np.pi
-    
+
     # Compute theta2
     h1 = -(z - D1)
     phi2 = np.arctan2(h1, hyp0*np.cos(alpha1))
@@ -64,7 +67,7 @@ def puma_560_ik(robot, T_tip, hand='left', elbow='up', flip='no'):
     theta2 = phi2 - alpha2
     if elbow == 'down':
         theta2 = phi2 + alpha2
-    
+
     # Compute theta2
     beta3 = np.arccos((A2**2 + hyp2**2 - hyp1**2)/(2*A2*hyp2))
     ALPHA3 = np.arccos(A3/hyp2)
@@ -73,34 +76,42 @@ def puma_560_ik(robot, T_tip, hand='left', elbow='up', flip='no'):
     return (theta1, theta2, theta3)
 
 
-path = os.path.dirname(__file__) + '/e07_puma_560_dh.csv' # PUMA_560_LeftArm_ElbowUp
-robot = rl.Robot(path)
-puma_560_fk() 
-fig = plt.figure()
-ax = plt.axes(projection='3d')
-num_steps = 30
-for step in range(num_steps):
-    theta = theta_final * step/num_steps
-    ax.set(xlim=(-0, 20), ylim=(0, 20), zlim=(0, 20))
-    # ax.grid(True)
-    robot.set_angles(theta)
-    plt.cla()
-    ax.plot([0, 0], [-3, 3], 'gray')
-    ax.plot([-3, 3], [0, 0], 'gray')
-    robot.draw(ax)
-    gl.set_axes_equal_3d(ax)
-    plt.pause(0.03)
-plt.show()
+def main():
+    # PUMA_560_LeftArm_ElbowUp
+    path = os.path.dirname(__file__) + '/e07_puma_560_dh.csv'
+    robot = rl.Robot(path)
+    puma_560_fk()
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    num_steps = 30
+    for step in range(num_steps):
+        theta = theta_final * step/num_steps
+        ax.set(xlim=(-0, 20), ylim=(0, 20), zlim=(0, 20))
+        # ax.grid(True)
+        robot.set_angles(theta)
+        if show_plots:
+            plt.cla()
+            ax.plot([0, 0], [-3, 3], 'gray')
+            ax.plot([-3, 3], [0, 0], 'gray')
+            robot.draw(ax)
+            gl.set_axes_equal_3d(ax)
+            plt.pause(0.03)
+    if show_plots:
+        plt.show()
 
-robot.set_angles(theta_final)
-endeffector_frame = robot.transformation_matrix_all[6]
+    robot.set_angles(theta_final)
+    endeffector_frame = robot.transformation_matrix_all[6]
 
-# result = puma_560_ik(robot, 
-#                      endeffector_frame[0, 3], 
-#                      endeffector_frame[1, 3], 
-#                      endeffector_frame[2, 3],
-#                      hand='left', elbow='up')
+    # result = puma_560_ik(robot,
+    #                      endeffector_frame[0, 3],
+    #                      endeffector_frame[1, 3],
+    #                      endeffector_frame[2, 3],
+    #                      hand='left', elbow='up')
 
-result = puma_560_ik(robot, endeffector_frame, hand='left', elbow='up')
-print(theta_final)
-print(np.degrees(result))
+    result = puma_560_ik(robot, endeffector_frame, hand='left', elbow='up')
+    print(theta_final)
+    print(np.degrees(result))
+
+
+if __name__ == '__main__':
+    main()

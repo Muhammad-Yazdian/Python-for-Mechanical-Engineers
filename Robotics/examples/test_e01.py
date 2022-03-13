@@ -1,19 +1,18 @@
-#===============================================================================
-# Tests roboticlib rotation matrices
-#
-# Author(s):
-#   Seied Muhammad Yazdian
-#
-# Last update:
-#   Feb 4, 2022
-#===============================================================================
-# NOTE: THIS IS A DUPLICATED TEST. See tests in example directory.
+import e01_rotate_frame as example
 import numpy as np
-import os
-import sys
-libs_path = os.path.dirname(os.path.dirname(__file__)) + '/libs'
-sys.path.append(libs_path)
+import roboticlib_path
 import roboticlib as rl
+
+
+def test_min_req():
+    example.show_plots = False
+    example.main()
+
+
+# import os
+# import sys
+# libs_path = os.path.dirname(os.path.dirname(__file__)) + '/libs'
+# sys.path.append(libs_path)
 # import unittest
 
 
