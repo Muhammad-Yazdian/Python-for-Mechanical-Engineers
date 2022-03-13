@@ -17,7 +17,7 @@ import roboticlib as rl
 # import unittest
 
 
-def test_rotationMatices():
+def test_rotation_matrices():
     # assert rl.rotation_matrix_x(0) == np.identity(3)
     answer = rl.rotation_matrix_x(0)
     key = np.identity(3)

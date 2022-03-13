@@ -16,12 +16,14 @@
 # By Seied Muhammad Yazdian | Feb 1s, 2022
 
 import numpy as np
-from numpy.linalg import inv
+from numpy.linalg import inv, norm
 from numpy import genfromtxt
 import mathlib_path
 import mathlib as ml
 import graphiclib_path
 import graphiclib as gl
+
+EPSILON = 1e-9 # [meter]
 
 def rotation_matrix_x(theta):
     r"""Returns the rotation matrix of a frame rotated by :math:`\theta` degrees about x axis
@@ -101,6 +103,7 @@ def rotation_matrix_joint(alpha, theta):
     st = np.sin(np.radians(theta))
     ca = np.cos(np.radians(alpha))
     sa = np.sin(np.radians(alpha))
+    # Rrsult = R_theta * R_alpha # Order matters
     return np.array([[ct, -st*ca, st*sa],
                     [st, ct*ca, -ct*sa],
                     [0, sa, ca]])
@@ -198,29 +201,25 @@ class Robot:
                 self.dh_array)
     
 
-    def angles(self, theta):
+    def set_angles(self, theta):
         """Update robot joint angles
 
           Args:
             - theta (list): Joint angles
          """
-        self.dh_array[:,3] = theta
+        self.dh_array[:, 3] = theta
         self.transformation_matrix_all = forward_kinematics_all_joints(
             self.dh_array)
-
-      
-    def set_dh(self):
-        self.dh_array = 1
 
     
     def draw(self, ax):
         i = 0
         p_a = self.transformation_matrix_all[i, 0:3, 3]
         for i in range(self.transformation_matrix_all.shape[0]):
-            gl.draw3D(ax, 'trans', self.transformation_matrix_all[i])
+            gl.draw_generic_3d(ax, 'trans', self.transformation_matrix_all[i])
             if i > 0:
                 p_b = self.transformation_matrix_all[i, 0:3, 3]
-                gl.draw3D(ax, 'arrow', p_b-p_a, position=p_a, color='k')
+                gl.draw_generic_3d(ax, 'arrow', p_b-p_a, position=p_a, color='k')
                 p_a = p_b
 
 
@@ -250,21 +249,21 @@ class RobotPuma560(Robot):
         i = 0
         p_a = self.transformation_matrix_all[i, 0:3, 3]
         for i in range(self.transformation_matrix_all.shape[0]):
-            # gl.draw3D(ax, 'trans', self.transformation_matrix_all[i])
+            # gl.draw_generic_3d(ax, 'trans', self.transformation_matrix_all[i])
             if i > 0:
                 p_b = self.transformation_matrix_all[i, 0:3, 3]
                 if i != 2:
-                    gl.draw3D(ax, 'arrow', p_b-p_a, position=p_a, color='k')
+                    gl.draw_generic_3d(ax, 'arrow', p_b-p_a, position=p_a, color='k')
                 else:
                     l1 = np.matmul(self.transformation_matrix_all[i-1, :3, :3], 
                                    [0, 0, self.dh_array[1, 1]])
                     l2 = np.matmul(self.transformation_matrix_all[i, :3, :3],
                                    [self.dh_array[1, 0], 0, 0])
-                    gl.draw3D(ax, 'arrow', l1, position=p_a, color='r')
-                    gl.draw3D(ax, 'arrow', l2, position=p_a + l1, color='r')
+                    gl.draw_generic_3d(ax, 'arrow', l1, position=p_a, color='r')
+                    gl.draw_generic_3d(ax, 'arrow', l2, position=p_a + l1, color='r')
                 p_a = p_b
-        gl.draw3D(ax, 'trans', self.transformation_matrix_all[0])
-        gl.draw3D(ax, 'trans', self.transformation_matrix_all[-1])
+        gl.draw_generic_3d(ax, 'trans', self.transformation_matrix_all[0])
+        gl.draw_generic_3d(ax, 'trans', self.transformation_matrix_all[-1])
 
 
     def inverse_kinematics(self, trans_matrix_tip, hand='left', elbow='up', flip='no'):
