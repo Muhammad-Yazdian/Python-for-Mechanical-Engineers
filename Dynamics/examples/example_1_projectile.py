@@ -30,13 +30,13 @@ x = y = t = 0
 # Display contents
 fig = plt.figure()
 ax = plt.axes()
-gl.drawArrow(ax, [v_x, v_y], [0, 0])
+gl.draw_arrow_2d(ax, [v_x, v_y], [0, 0])
 
 for i in range(num_steps):
     x += v_x * dt
     y += v_y * dt # Compute position before updating velocity
     v_y += g * dt
-    gl.drawArrow(ax, [v_x, v_y], [x, y])
+    gl.draw_arrow_2d(ax, [v_x, v_y], [x, y])
     t = t + dt
 
 plt.grid()
